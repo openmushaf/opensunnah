@@ -448,14 +448,13 @@ async function loadColl(coll,lang){
   ]);
   const arBy={}; if(ar&&ar.hadiths) ar.hadiths.forEach(h=>arBy[h.hadithnumber]=h.text);
   const secs=tr.metadata.sections||tr.metadata.section||{};
-  const det=tr.metadata.section_details||tr.metadata.section_detail||{};
-  // membership by reference.book — section_details ranges disagree with it
+  // membership by reference.book — the declared section ranges disagree with it
   // in Bukhari section 0 (declared 0-0, actually 311 hadiths)
   const byBook={};
   tr.hadiths.forEach(h=>{const b=h.reference&&h.reference.book;
     if(b===undefined||b===null) return; (byBook[b]=byBook[b]||[]).push(h);});
   const list=Object.keys(secs).map(Number).filter(n=>(byBook[n]||[]).length).sort((a,b)=>a-b);
-  return cache[key]={ed,name:tr.metadata.name,hadiths:tr.hadiths,arBy,secs,det,byBook,list,
+  return cache[key]={ed,name:tr.metadata.name,hadiths:tr.hadiths,arBy,secs,byBook,list,
                      dir:LANGS[lang].dir==='rtl'?'rtl':'ltr'};
 }
 const inSection=(d,s)=>d.byBook[s]||[];
@@ -543,7 +542,7 @@ async function render(){
   const d=await loadColl(state.coll,state.lang).catch(e=>{setStatus('warn',T('fail')+' — '+e.message,render);return null;});
   if(!d) return;
   hideStatus();
-  if(!d.det[state.sec]) state.sec=d.list[0]||1;
+  if(d.list.length && !d.list.includes(state.sec)) state.sec=d.list[0];
   const hs=inSection(d,state.sec);
   $('#sheet').classList.toggle('hide',state.mode!=='section');
   $('#solo').classList.toggle('hide',state.mode!=='hadith');
@@ -690,13 +689,13 @@ $('#next').onclick=()=>{
 $('#numIn').onchange=()=>{
   const d=cache[edFor(state.lang,state.coll)]; if(!d)return;
   const n=+$('#numIn').value; const h=d.hadiths.find(x=>x.hadithnumber===n); if(!h)return;
-  const sec=d.list.find(s=>d.det[s]&&n>=d.det[s].hadithnumber_first&&n<=d.det[s].hadithnumber_last)||state.sec;
+  const sec=(h.reference&&h.reference.book!=null)?h.reference.book:state.sec;
   state.mode='hadith';paintDensity();go(state.coll,sec,n);
 };
 $('#randBtn').onclick=()=>{
   const d=cache[edFor(state.lang,state.coll)]; if(!d||!d.hadiths.length)return;
   const h=d.hadiths[Math.floor(Math.random()*d.hadiths.length)];
-  const sec=d.list.find(s=>d.det[s]&&h.hadithnumber>=d.det[s].hadithnumber_first&&h.hadithnumber<=d.det[s].hadithnumber_last)||state.sec;
+  const sec=(h.reference&&h.reference.book!=null)?h.reference.book:state.sec;
   state.mode='hadith';paintDensity();go(state.coll,sec,h.hadithnumber);
 };
 $('#topBtn').onclick=()=>{state.mode='section';paintDensity();state.sel=null;render();window.scrollTo({top:0,behavior:'smooth'});};
