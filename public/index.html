@@ -447,15 +447,18 @@ async function loadColl(coll,lang){
     getJSON(`${CDN}/editions/ara-${coll}.min.json`).catch(()=>null),
   ]);
   const arBy={}; if(ar&&ar.hadiths) ar.hadiths.forEach(h=>arBy[h.hadithnumber]=h.text);
-  const secs=tr.metadata.section||{}, det=tr.metadata.section_detail||{};
-  const list=Object.keys(secs).filter(k=>secs[k]&&String(secs[k]).trim()).map(Number).sort((a,b)=>a-b);
-  return cache[key]={ed,name:tr.metadata.name,hadiths:tr.hadiths,arBy,secs,det,list,
+  const secs=tr.metadata.sections||tr.metadata.section||{};
+  const det=tr.metadata.section_details||tr.metadata.section_detail||{};
+  // membership by reference.book — section_details ranges disagree with it
+  // in Bukhari section 0 (declared 0-0, actually 311 hadiths)
+  const byBook={};
+  tr.hadiths.forEach(h=>{const b=h.reference&&h.reference.book;
+    if(b===undefined||b===null) return; (byBook[b]=byBook[b]||[]).push(h);});
+  const list=Object.keys(secs).map(Number).filter(n=>(byBook[n]||[]).length).sort((a,b)=>a-b);
+  return cache[key]={ed,name:tr.metadata.name,hadiths:tr.hadiths,arBy,secs,det,byBook,list,
                      dir:LANGS[lang].dir==='rtl'?'rtl':'ltr'};
 }
-const inSection=(d,s)=>{
-  const dd=d.det[s]; if(!dd) return [];
-  return d.hadiths.filter(h=>h.hadithnumber>=dd.hadithnumber_first&&h.hadithnumber<=dd.hadithnumber_last);
-};
+const inSection=(d,s)=>d.byBook[s]||[];
 
 /* ══ ornament ═════════════════════════════════════════════ */
 const cv=$('#clock'),g2=cv.getContext('2d');
@@ -668,7 +671,7 @@ function buildSecSel(d){
   const s=$('#secSel'); if(s.dataset.for===d.ed) {s.value=state.sec; return;}
   s.dataset.for=d.ed; s.innerHTML='';
   d.list.forEach(n=>s.appendChild(Object.assign(document.createElement('option'),
-    {value:n,textContent:`${n} · ${d.secs[n]}`})));
+    {value:n,textContent:`${n} · ${(d.secs[n]&&String(d.secs[n]).trim())||T('section')+' '+n}`})));
   s.value=state.sec;
   s.onchange=()=>go(state.coll,+s.value);
 }
