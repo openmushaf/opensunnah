@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<meta charset="utf-8">
+<meta name="description" content="A free, open hadith reader. Ten collections, nine languages, every grading shown with the scholar who gave it. No account, no tracking.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Sunnah — a free, open hadith reader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --lapis:#33427E; --saffron:#E5A33A; --madder:#B0483E;
+    --pearl:#EFE3CC; --verdigris:#4E8577;
+    --display:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua','Hoefler Text',Georgia,serif;
+    --ui:'Avenir Next','Segoe UI',system-ui,-apple-system,sans-serif;
+    --mono:'SF Mono','JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+    --arabic:'Amiri','Scheherazade New','Traditional Arabic','Geeza Pro','Noto Naskh Arabic',serif;
+    --uiLine:1.6;
+  }
+  html[lang="ur"]{--ui:'Noto Nastaliq Urdu',var(--arabic);--display:'Noto Nastaliq Urdu',var(--arabic);--uiLine:2.4}
+  html[lang="ar"]{--ui:'Noto Naskh Arabic','Amiri',system-ui,sans-serif;--display:'Amiri',serif;--uiLine:1.9}
+  html[lang="bn"]{--ui:'Noto Sans Bengali',system-ui,sans-serif;--display:'Noto Serif Bengali',Georgia,serif;--uiLine:1.8}
+  html[lang="ta"]{--ui:'Noto Sans Tamil',system-ui,sans-serif;--display:'Noto Serif Tamil',Georgia,serif;--uiLine:1.8}
+
+  *{box-sizing:border-box}
+  html{height:100%}
+  body{margin:0;min-height:100%;
+    background-color:#0B0814;
+    background-image:radial-gradient(130% 95% at 50% 2%,#241B3E 0%,#171029 42%,#0B0814 100%);
+    background-repeat:no-repeat;background-attachment:fixed;
+    color:var(--pearl);font-family:var(--ui);line-height:var(--uiLine);-webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;align-items:center;
+    padding:clamp(16px,3vw,32px) clamp(14px,3vw,34px) 36px}
+  .wrap{width:100%;max-width:1260px}
+  @media(min-width:1500px){.wrap{max-width:1500px}}
+  .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:rgba(239,227,204,.66)}
+  html[dir="rtl"] .eyebrow{letter-spacing:0;text-transform:none}
+
+  header{display:flex;align-items:baseline;gap:.7em;flex-wrap:wrap;margin-bottom:6px}
+  h1{font-family:var(--display);font-weight:400;font-size:clamp(1.45rem,3.2vw,1.95rem);margin:0}
+  .ar-title{font-family:var(--arabic);font-size:clamp(1.15rem,2.6vw,1.5rem);color:var(--saffron);opacity:.85;line-height:1}
+  .loc{font-family:var(--display);font-style:italic;font-size:15px;color:rgba(239,227,204,.72);
+       padding-inline-start:.7em;border-inline-start:1px solid rgba(229,163,58,.35)}
+  .tagline{margin-inline-start:auto;font-size:12.5px;color:rgba(239,227,204,.62)}
+  .rule{height:1px;background:linear-gradient(90deg,transparent,rgba(229,163,58,.3) 8%,rgba(229,163,58,.3) 92%,transparent);margin:0 0 18px}
+
+  .density{display:flex;border:1px solid rgba(239,227,204,.13);border-radius:3px;overflow:hidden;width:max-content;margin-bottom:18px;max-width:100%}
+  .den{all:unset;cursor:pointer;padding:9px 17px;display:flex;flex-direction:column;gap:3px;
+       border-inline-end:1px solid rgba(239,227,204,.09);transition:background .18s;text-align:center}
+  .den:last-child{border-inline-end:0}
+  .den:hover{background:rgba(229,163,58,.06)}
+  .den:focus-visible{outline:1px solid var(--saffron);outline-offset:-2px}
+  .den .t{font-family:var(--display);font-size:.98rem;color:rgba(239,227,204,.72)}
+  .den .s{font-size:11px;letter-spacing:.04em;color:rgba(239,227,204,.5)}
+  .den[aria-pressed="true"]{background:rgba(176,72,62,.16)}
+  .den[aria-pressed="true"] .t{color:var(--saffron)}
+  .den[aria-pressed="true"] .s{color:rgba(239,227,204,.66)}
+
+  .stage{display:grid;grid-template-columns:1fr 300px;gap:clamp(20px,3vw,44px);align-items:start}
+
+  /* ── reading surface ───────────────────────────────── */
+  .sheet{border:1px solid rgba(229,163,58,.2);border-radius:3px;background:rgba(11,8,20,.32);
+         padding:clamp(16px,2.4vw,28px)}
+  .hrow{padding:22px 6px;border-bottom:1px solid rgba(239,227,204,.09);cursor:pointer;transition:background .16s}
+  .hrow:last-child{border-bottom:0}
+  .hrow:hover{background:rgba(229,163,58,.045)}
+  .hrow.sel{background:rgba(229,163,58,.075);box-shadow:inset 2px 0 0 var(--madder)}
+  .hrow .a{font-family:var(--arabic);direction:rtl;text-align:right;font-size:clamp(1.12rem,1.7vw,1.34rem);line-height:2.3;margin:0 0 12px}
+  .hrow .t{font-family:var(--display);font-size:1rem;line-height:1.75;color:rgba(239,227,204,.9);margin:0}
+  .hrow .n{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:rgba(239,227,204,.6);
+           margin-top:12px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;direction:ltr}
+  @media(min-width:900px){.hrow.par{display:grid;grid-template-columns:1.05fr 1fr;gap:26px;align-items:start}
+    .hrow.par .a{margin:0}.hrow.par .n{grid-column:1/-1}}
+
+  /* ── grade pills — the point of the whole site ─────── */
+  .g{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:2px;
+     font-family:var(--ui);font-size:11.5px;letter-spacing:.02em;border:1px solid;white-space:nowrap}
+  .g.sahih{color:#8FD3A8;border-color:rgba(143,211,168,.45);background:rgba(143,211,168,.09)}
+  .g.hasan{color:#9FC4E8;border-color:rgba(159,196,232,.45);background:rgba(159,196,232,.09)}
+  .g.daif{color:#E89A8E;border-color:rgba(232,154,142,.5);background:rgba(232,154,142,.1)}
+  .g.other{color:rgba(239,227,204,.75);border-color:rgba(239,227,204,.25)}
+  .g .who{opacity:.72;font-size:10.5px}
+  .nograde{color:rgba(239,227,204,.6);font-style:italic;font-size:11.5px}
+
+  /* ── single hadith ─────────────────────────────────── */
+  .solo{border:1px solid rgba(229,163,58,.2);border-radius:3px;background:rgba(11,8,20,.35);padding:clamp(22px,4vw,40px)}
+  .solo .a{font-family:var(--arabic);direction:rtl;text-align:right;font-size:clamp(1.32rem,2.9vw,1.85rem);line-height:2.25;margin:0}
+  .solo .div{height:1px;background:rgba(239,227,204,.14);margin:26px 0}
+  .solo .t{font-family:var(--display);font-size:clamp(1rem,2.1vw,1.15rem);line-height:1.78;color:rgba(239,227,204,.94);margin:0}
+  .gradebox{margin-top:26px;padding-top:20px;border-top:1px solid rgba(239,227,204,.14)}
+  .gradebox .eyebrow{display:block;margin-bottom:12px}
+  .gtable{display:grid;grid-template-columns:auto 1fr;gap:9px 16px;align-items:baseline;font-size:13.5px}
+  .gtable .sch{font-family:var(--display);color:rgba(239,227,204,.8);text-align:end}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:22px;font-family:var(--mono);
+        font-size:11.5px;letter-spacing:.05em;color:rgba(239,227,204,.66);direction:ltr}
+  .meta .hi{color:var(--saffron)}
+
+  /* ── study drawer ──────────────────────────────────── */
+  .study{margin-top:20px;border:1px solid rgba(229,163,58,.18);border-radius:3px;padding:18px 20px;background:rgba(11,8,20,.4)}
+  .study .ref{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:var(--saffron);margin-bottom:10px;direction:ltr}
+  .tabs{display:flex;border-bottom:1px solid rgba(239,227,204,.12);margin:6px 0 12px;flex-wrap:wrap}
+  .tab{all:unset;cursor:pointer;padding:8px 14px;font-size:12px;letter-spacing:.05em;
+       color:rgba(239,227,204,.62);border-bottom:1px solid transparent;margin-bottom:-1px}
+  .tab:hover{color:var(--pearl)}
+  .tab:focus-visible{outline:1px solid var(--saffron);outline-offset:-2px}
+  .tab[aria-selected="true"]{color:var(--saffron);border-bottom-color:var(--madder)}
+  .cite{font-family:var(--mono);font-size:12.5px;line-height:1.85;white-space:pre-wrap;word-break:break-word;
+        direction:ltr;text-align:start;background:rgba(0,0,0,.3);border:1px solid rgba(239,227,204,.1);
+        border-radius:3px;padding:14px 16px;color:rgba(239,227,204,.88);max-height:220px;overflow:auto}
+  .cite .ai{font-family:var(--arabic);font-size:17px;direction:rtl;display:block;text-align:right;line-height:2}
+  .row{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+
+  /* ── transport ─────────────────────────────────────── */
+  .transport{display:flex;align-items:center;justify-content:center;gap:15px;margin-top:20px;
+    position:sticky;bottom:12px;z-index:5;padding:11px 18px;border-radius:34px;width:max-content;
+    margin-inline:auto;background:rgba(22,15,40,.95);backdrop-filter:blur(10px);
+    border:1px solid rgba(229,163,58,.3);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .turn{all:unset;cursor:pointer;width:46px;height:46px;display:grid;place-items:center;border-radius:50%;
+        background:rgba(239,227,204,.1);border:1px solid rgba(239,227,204,.42);color:var(--pearl);
+        transition:background .18s,border-color .18s,color .18s}
+  .turn svg{width:19px;height:19px}
+  .turn:hover{background:rgba(229,163,58,.2);border-color:var(--saffron);color:var(--saffron)}
+  .turn:focus-visible{outline:2px solid var(--saffron);outline-offset:3px}
+  .turn[disabled]{opacity:.34;cursor:not-allowed}
+  .where{font-family:var(--mono);font-size:13px;letter-spacing:.05em;color:var(--pearl);min-width:190px;text-align:center;direction:ltr}
+
+  /* ── rail ──────────────────────────────────────────── */
+  .rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:18px}
+  .clockwrap{position:relative;width:100%;max-width:300px;aspect-ratio:1;margin:0 auto}
+  canvas{width:100%;height:100%;display:block;cursor:pointer}
+  .clockmid{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none}
+  .pct{font-family:var(--display);font-size:1.5rem;line-height:1.15}
+  .pgs{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:rgba(239,227,204,.66);margin-top:6px;direction:ltr}
+  .legend{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:11.5px;color:rgba(239,227,204,.66)}
+  .legend i{width:10px;height:10px;border-radius:2px;display:inline-block;margin-top:4px}
+
+  select,input{width:100%;background:rgba(0,0,0,.3);color:var(--pearl);font-family:var(--ui);
+    border:1px solid rgba(239,227,204,.2);border-radius:3px;padding:9px 11px;font-size:13px}
+  select:focus-visible,input:focus-visible{outline:1px solid var(--saffron);outline-offset:1px}
+  .grp>.eyebrow{display:block;margin-bottom:8px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ghost{all:unset;cursor:pointer;text-align:center;padding:9px 14px;border:1px solid rgba(239,227,204,.2);
+         border-radius:3px;font-size:12px;letter-spacing:.04em;color:rgba(239,227,204,.8)}
+  .ghost:hover{border-color:rgba(229,163,58,.7);color:var(--saffron)}
+  .ghost:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
+
+  .status{display:flex;align-items:center;gap:10px;padding:10px 13px;margin-bottom:16px;
+    border:1px solid rgba(239,227,204,.12);border-radius:3px;font-size:12.5px;color:rgba(239,227,204,.72)}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(239,227,204,.4);flex:none}
+  .dot.warn{background:var(--madder);box-shadow:0 0 0 3px rgba(176,72,62,.18)}
+  .status button{all:unset;margin-inline-start:auto;cursor:pointer;color:var(--saffron);border-bottom:1px solid rgba(229,163,58,.5)}
+  .status.hidden{display:none}
+  .hide{display:none!important}
+
+  footer{margin-top:32px;padding-top:16px;border-top:1px solid rgba(239,227,204,.1);
+         font-size:13px;line-height:1.8;color:rgba(239,227,204,.8)}
+  footer a{color:rgba(239,227,204,.9)}
+  footer b{color:var(--pearl);font-weight:500}
+  .support{margin-top:18px;padding-top:16px;border-top:1px solid rgba(239,227,204,.16);
+           font-size:14px;line-height:1.8;color:var(--pearl);
+           display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+  .support a{color:var(--saffron);text-decoration:none;border:1px solid rgba(229,163,58,.5);
+             border-radius:3px;padding:8px 15px;white-space:nowrap;font-size:12.5px;
+             transition:background .18s,border-color .18s}
+  .support a:hover{background:rgba(229,163,58,.12);border-color:var(--saffron)}
+
+  @media(max-width:1000px){
+    .stage{grid-template-columns:1fr;gap:28px}
+    .rail{position:static;max-width:420px;margin:0 auto;width:100%}
+  }
+  @media(max-width:700px){
+    .transport{gap:10px;padding:9px 12px}
+    .where{min-width:110px;font-size:12px}
+    .turn{width:44px;height:44px}
+    .density{width:100%}.den{flex:1;padding:9px 6px;min-width:0}
+    .tab,.ghost{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+    select,input{min-height:44px}
+    .clockwrap{max-width:250px}
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1 id="brand">Open Sunnah</h1><span class="ar-title">السنّة</span>
+    <span class="loc" id="loc"></span>
+    <span class="tagline" id="tagline">no account · no tracking · nothing leaves this device</span>
+  </header>
+  <div class="rule"></div>
+
+  <div class="density" id="density" role="group"></div>
+  <div class="status" id="status"><span class="dot" id="dot"></span><span id="statusText">Loading…</span></div>
+
+  <main class="stage">
+    <div>
+      <div class="sheet" id="sheet"></div>
+      <div class="solo hide" id="solo">
+        <p class="a" id="soloAr" dir="rtl" lang="ar"></p>
+        <div class="div"></div>
+        <p class="t" id="soloTr"></p>
+        <div class="gradebox">
+          <span class="eyebrow" id="l_grades">Gradings</span>
+          <div class="gtable" id="gtable"></div>
+        </div>
+        <div class="meta" id="soloMeta"></div>
+      </div>
+
+      <div class="transport">
+        <button class="turn" id="prev"></button>
+        <span class="where" id="where">—</span>
+        <button class="turn" id="next"></button>
+      </div>
+
+      <div class="study" id="study"></div>
+    </div>
+
+    <aside class="rail">
+      <div class="grp">
+        <span class="eyebrow" id="l_lang">Language</span>
+        <select id="langSel"></select>
+        <div id="draftNote" style="font-size:11.5px;line-height:1.5;color:#E08878;margin-top:7px"></div>
+      </div>
+
+      <div class="clockwrap">
+        <canvas id="clock"></canvas>
+        <div class="clockmid"><div class="pct" id="pct">—</div><div class="pgs" id="pgs"></div></div>
+      </div>
+      <div class="legend" id="legend"></div>
+
+      <div class="grp">
+        <span class="eyebrow" id="l_coll">Collection</span>
+        <select id="collSel"></select>
+        <div style="margin-top:8px"><select id="secSel"></select></div>
+      </div>
+      <div class="grp">
+        <span class="eyebrow" id="l_goto">Go to hadith</span>
+        <input type="number" id="numIn" min="1" placeholder="1035">
+      </div>
+      <div class="grp two">
+        <button class="ghost" id="randBtn">Random</button>
+        <button class="ghost" id="topBtn">Top of section</button>
+      </div>
+    </aside>
+  </main>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+(() => {
+"use strict";
+const CDN='https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ══ collections — keys and names verified against editions.json ══ */
+const COLL={
+  bukhari:{en:'Sahih al-Bukhari',ar:'صحيح البخاري',langs:['ara','ben','eng','fra','ind','rus','tam','tur','urd']},
+  muslim:{en:'Sahih Muslim',ar:'صحيح مسلم',langs:['ara','ben','eng','fra','ind','rus','tam','tur','urd']},
+  abudawud:{en:'Sunan Abu Dawud',ar:'سنن أبي داود',langs:['ara','ben','eng','fra','ind','rus','tur','urd']},
+  tirmidhi:{en:'Jami at-Tirmidhi',ar:'جامع الترمذي',langs:['ara','ben','eng','ind','tur','urd']},
+  nasai:{en:'Sunan an-Nasai',ar:'سنن النسائي',langs:['ara','ben','eng','fra','ind','tur','urd']},
+  ibnmajah:{en:'Sunan Ibn Majah',ar:'سنن ابن ماجه',langs:['ara','ben','eng','fra','ind','tur','urd']},
+  malik:{en:'Muwatta Malik',ar:'موطأ مالك',langs:['ara','ben','eng','fra','ind','tur','urd']},
+  nawawi:{en:'Forty Hadith of an-Nawawi',ar:'الأربعون النووية',langs:['ara','ben','eng','fra','tur']},
+  qudsi:{en:'Forty Hadith Qudsi',ar:'الأربعون القدسية',langs:['ara','eng','fra']},
+  dehlawi:{en:'Forty Hadith of Shah Waliullah',ar:'أربعون ولي الله الدهلوي',langs:['ara','eng','fra']},
+};
+/* UI locales limited to languages the hadith text actually exists in.
+   Offering a UI language with no content behind it would be a false promise. */
+const LANGS={
+ en:{name:'English',code:'eng',dir:'ltr',rev:true,s:{
+   tag:'no account · no tracking · nothing leaves this device',
+   m1:'Section',m1s:'read through a book',m2:'Hadith',m2s:'study · grade · cite',
+   lang:'Language',coll:'Collection',section:'Section',goto:'Go to hadith',
+   grades:'Gradings',rand:'Random',top:'Top of section',
+   empty:'Select any hadith — its gradings and citation open here, in both views.',
+   copy:'Copy citation',copied:'Copied',open:'Open this hadith',see:'See it in the section',
+   t1:'Short',t2:'Full',t3:'Block',t4:'Markdown',
+   sahih:'Sahih',hasan:'Hasan',daif:"Da'if",other:'Other',ungraded:'No grading recorded',
+   loading:'Loading…',fail:'Cannot reach the source',retry:'Retry',
+   lColl:'collections · outer · by size',lSec:'sections of this collection',lGrade:'gradings in this section',
+   draft:'This translation is a draft — corrections welcome',
+   sup:'Help keep Islamic knowledge accessible. Free, no ads, no account. %s costs $37 a year to run — the code is open.',
+   supCta:'Support development'}},
+ ar:{name:'العربية',code:'ara',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{
+   tag:'بلا حساب · بلا تتبّع · لا شيء يغادر جهازك',
+   m1:'باب',m1s:'قراءة الكتاب',m2:'حديث',m2s:'دراسة · درجة · اقتباس',
+   lang:'اللغة',coll:'المجموعة',section:'الباب',goto:'انتقل إلى حديث',
+   grades:'الدرجات',rand:'عشوائي',top:'أول الباب',
+   empty:'اختر أي حديث — تظهر درجاته واقتباسه هنا.',
+   copy:'نسخ الاقتباس',copied:'تم النسخ',open:'افتح هذا الحديث',see:'اعرضه في الباب',
+   t1:'مختصر',t2:'كامل',t3:'اقتباس',t4:'ماركداون',
+   sahih:'صحيح',hasan:'حسن',daif:'ضعيف',other:'أخرى',ungraded:'لا توجد درجة مسجّلة',
+   loading:'جارٍ التحميل…',fail:'تعذّر الوصول إلى المصدر',retry:'إعادة المحاولة',
+   lColl:'المجموعات · الخارج · بالحجم',lSec:'أبواب هذه المجموعة',lGrade:'درجات هذا الباب',
+   draft:'هذه الترجمة مسوّدة — التصحيحات مرحّب بها',
+   sup:'ساهم في إبقاء المعرفة الإسلامية في متناول الجميع. مجاني، بلا إعلانات، بلا حساب. %s يكلّف ٣٧ دولاراً في السنة — والشيفرة مفتوحة.',
+   supCta:'ادعم التطوير'}},
+ ur:{name:'اردو',code:'urd',dir:'rtl',rev:false,font:'Noto+Nastaliq+Urdu:wght@400;600',s:{
+   tag:'کوئی اکاؤنٹ نہیں · کوئی ٹریکنگ نہیں · کچھ بھی اس ڈیوائس سے باہر نہیں جاتا',
+   m1:'باب',m1s:'کتاب پڑھیں',m2:'حدیث',m2s:'مطالعہ · درجہ · حوالہ',
+   lang:'زبان',coll:'مجموعہ',section:'باب',goto:'حدیث پر جائیں',
+   grades:'درجات',rand:'بے ترتیب',top:'باب کا آغاز',
+   empty:'کسی بھی حدیث کو منتخب کریں — اس کے درجات اور حوالہ یہاں کھلیں گے۔',
+   copy:'حوالہ نقل کریں',copied:'نقل ہو گیا',open:'یہ حدیث کھولیں',see:'باب میں دیکھیں',
+   t1:'مختصر',t2:'مکمل',t3:'اقتباس',t4:'مارک ڈاؤن',
+   sahih:'صحیح',hasan:'حسن',daif:'ضعیف',other:'دیگر',ungraded:'کوئی درجہ درج نہیں',
+   loading:'لوڈ ہو رہا ہے…',fail:'ماخذ تک رسائی نہیں',retry:'دوبارہ کوشش',
+   lColl:'مجموعے · بیرونی · حجم کے مطابق',lSec:'اس مجموعے کے ابواب',lGrade:'اس باب کے درجات',
+   draft:'یہ ترجمہ مسودہ ہے — تصحیح خوش آمدید',
+   sup:'اسلامی علم کو سب کی رسائی میں رکھنے میں مدد کریں۔ مفت، کوئی اشتہار نہیں، کوئی اکاؤنٹ نہیں۔ %s پر سالانہ ۳۷ ڈالر لاگت آتی ہے — کوڈ کھلا ہے۔',
+   supCta:'ترقی میں تعاون کریں'}},
+ id:{name:'Bahasa Indonesia',code:'ind',dir:'ltr',rev:false,s:{
+   tag:'tanpa akun · tanpa pelacakan · tidak ada yang keluar dari perangkat ini',
+   m1:'Bab',m1s:'baca satu kitab',m2:'Hadis',m2s:'telaah · derajat · kutip',
+   lang:'Bahasa',coll:'Kitab',section:'Bab',goto:'Buka hadis',
+   grades:'Derajat',rand:'Acak',top:'Awal bab',
+   empty:'Pilih hadis mana pun — derajat dan kutipannya muncul di sini.',
+   copy:'Salin kutipan',copied:'Tersalin',open:'Buka hadis ini',see:'Lihat di bab',
+   t1:'Singkat',t2:'Lengkap',t3:'Kutipan',t4:'Markdown',
+   sahih:'Sahih',hasan:'Hasan',daif:'Daif',other:'Lainnya',ungraded:'Derajat tidak tercatat',
+   loading:'Memuat…',fail:'Tidak dapat menghubungi sumber',retry:'Coba lagi',
+   lColl:'kitab · luar · menurut ukuran',lSec:'bab dalam kitab ini',lGrade:'derajat dalam bab ini',
+   draft:'Terjemahan ini masih draf — koreksi sangat diterima',
+   sup:'Bantu jaga ilmu Islam tetap terjangkau. Gratis, tanpa iklan, tanpa akun. %s menghabiskan $37 per tahun — kodenya terbuka.',
+   supCta:'Dukung pengembangan'}},
+ bn:{name:'বাংলা',code:'ben',dir:'ltr',rev:false,font:'Noto+Serif+Bengali:wght@400;600&family=Noto+Sans+Bengali:wght@400;600',s:{
+   tag:'কোনো অ্যাকাউন্ট নয় · কোনো ট্র্যাকিং নয় · কিছুই এই ডিভাইস ছাড়ে না',
+   m1:'অধ্যায়',m1s:'একটি কিতাব পড়ুন',m2:'হাদিস',m2s:'অধ্যয়ন · মান · উদ্ধৃতি',
+   lang:'ভাষা',coll:'সংকলন',section:'অধ্যায়',goto:'হাদিসে যান',
+   grades:'মান',rand:'এলোমেলো',top:'অধ্যায়ের শুরু',
+   empty:'যেকোনো হাদিস বেছে নিন — এর মান ও উদ্ধৃতি এখানে আসবে।',
+   copy:'উদ্ধৃতি কপি করুন',copied:'কপি হয়েছে',open:'এই হাদিস খুলুন',see:'অধ্যায়ে দেখুন',
+   t1:'সংক্ষিপ্ত',t2:'পূর্ণ',t3:'উদ্ধৃতি',t4:'মার্কডাউন',
+   sahih:'সহিহ',hasan:'হাসান',daif:'দুর্বল',other:'অন্যান্য',ungraded:'কোনো মান লিপিবদ্ধ নেই',
+   loading:'লোড হচ্ছে…',fail:'উৎসে পৌঁছানো যাচ্ছে না',retry:'আবার চেষ্টা',
+   lColl:'সংকলন · বাইরে · আকার অনুসারে',lSec:'এই সংকলনের অধ্যায়',lGrade:'এই অধ্যায়ের মান',
+   draft:'এই অনুবাদ খসড়া — সংশোধন স্বাগত',
+   sup:'ইসলামি জ্ঞান সবার নাগালে রাখতে সাহায্য করুন। বিনামূল্যে, বিজ্ঞাপন নেই, অ্যাকাউন্ট নেই। %s চালাতে বছরে $37 লাগে — কোড উন্মুক্ত।',
+   supCta:'উন্নয়নে সহায়তা করুন'}},
+ tr:{name:'Türkçe',code:'tur',dir:'ltr',rev:false,s:{
+   tag:'hesap yok · takip yok · hiçbir şey bu cihazdan çıkmaz',
+   m1:'Bölüm',m1s:'bir kitabı oku',m2:'Hadis',m2s:'incele · derece · alıntıla',
+   lang:'Dil',coll:'Külliyat',section:'Bölüm',goto:'Hadise git',
+   grades:'Dereceler',rand:'Rastgele',top:'Bölüm başı',
+   empty:'Herhangi bir hadisi seçin — dereceleri ve alıntısı burada açılır.',
+   copy:'Alıntıyı kopyala',copied:'Kopyalandı',open:'Bu hadisi aç',see:'Bölümde gör',
+   t1:'Kısa',t2:'Tam',t3:'Alıntı',t4:'Markdown',
+   sahih:'Sahih',hasan:'Hasen',daif:'Zayıf',other:'Diğer',ungraded:'Derece kaydı yok',
+   loading:'Yükleniyor…',fail:'Kaynağa ulaşılamıyor',retry:'Tekrar dene',
+   lColl:'külliyat · dış · boyuta göre',lSec:'bu külliyatın bölümleri',lGrade:'bu bölümdeki dereceler',
+   draft:'Bu çeviri taslaktır — düzeltmeler memnuniyetle karşılanır',
+   sup:'İslami ilmin herkese açık kalmasına yardım edin. Ücretsiz, reklamsız, hesapsız. %s yılda 37 dolara mal oluyor — kod açık.',
+   supCta:'Geliştirmeyi destekle'}},
+ fr:{name:'Français',code:'fra',dir:'ltr',rev:false,s:{
+   tag:'pas de compte · pas de suivi · rien ne quitte cet appareil',
+   m1:'Chapitre',m1s:'lire un livre',m2:'Hadith',m2s:'étudier · degré · citer',
+   lang:'Langue',coll:'Recueil',section:'Chapitre',goto:'Aller au hadith',
+   grades:'Degrés',rand:'Aléatoire',top:'Début du chapitre',
+   empty:'Choisissez un hadith — ses degrés et sa citation s’ouvrent ici.',
+   copy:'Copier la citation',copied:'Copié',open:'Ouvrir ce hadith',see:'Voir dans le chapitre',
+   t1:'Court',t2:'Complet',t3:'Bloc',t4:'Markdown',
+   sahih:'Sahih',hasan:'Hasan',daif:'Da’if',other:'Autre',ungraded:'Aucun degré enregistré',
+   loading:'Chargement…',fail:'Source injoignable',retry:'Réessayer',
+   lColl:'recueils · extérieur · par taille',lSec:'chapitres de ce recueil',lGrade:'degrés dans ce chapitre',
+   draft:'Cette traduction est une ébauche — corrections bienvenues',
+   sup:'Aidez à garder le savoir islamique accessible. Gratuit, sans publicité, sans compte. %s coûte 37 $ par an — le code est ouvert.',
+   supCta:'Soutenir le développement'}},
+ ru:{name:'Русский',code:'rus',dir:'ltr',rev:false,s:{
+   tag:'без аккаунта · без слежки · ничто не покидает это устройство',
+   m1:'Глава',m1s:'читать книгу',m2:'Хадис',m2s:'разбор · степень · ссылка',
+   lang:'Язык',coll:'Сборник',section:'Глава',goto:'Перейти к хадису',
+   grades:'Степени достоверности',rand:'Случайный',top:'Начало главы',
+   empty:'Выберите любой хадис — его степени и ссылка откроются здесь.',
+   copy:'Копировать ссылку',copied:'Скопировано',open:'Открыть этот хадис',see:'Показать в главе',
+   t1:'Кратко',t2:'Полно',t3:'Цитата',t4:'Markdown',
+   sahih:'Сахих',hasan:'Хасан',daif:'Даиф',other:'Другое',ungraded:'Степень не указана',
+   loading:'Загрузка…',fail:'Не удаётся связаться с источником',retry:'Повторить',
+   lColl:'сборники · внешнее · по объёму',lSec:'главы этого сборника',lGrade:'степени в этой главе',
+   draft:'Этот перевод — черновик, правки приветствуются',
+   sup:'Помогите сохранить исламское знание доступным. Бесплатно, без рекламы, без аккаунта. %s стоит $37 в год — код открыт.',
+   supCta:'Поддержать разработку'}},
+ ta:{name:'தமிழ்',code:'tam',dir:'ltr',rev:false,font:'Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Tamil:wght@400;600',s:{
+   tag:'கணக்கு இல்லை · கண்காணிப்பு இல்லை · எதுவும் இந்தச் சாதனத்தை விட்டு வெளியேறாது',
+   m1:'அத்தியாயம்',m1s:'ஒரு நூலைப் படி',m2:'ஹதீஸ்',m2s:'ஆய்வு · தரம் · மேற்கோள்',
+   lang:'மொழி',coll:'தொகுப்பு',section:'அத்தியாயம்',goto:'ஹதீஸுக்குச் செல்',
+   grades:'தரங்கள்',rand:'சீரற்ற',top:'அத்தியாயத் தொடக்கம்',
+   empty:'எந்த ஹதீஸையும் தேர்ந்தெடுங்கள் — அதன் தரமும் மேற்கோளும் இங்கே திறக்கும்.',
+   copy:'மேற்கோளை நகலெடு',copied:'நகலெடுக்கப்பட்டது',open:'இந்த ஹதீஸைத் திற',see:'அத்தியாயத்தில் பார்',
+   t1:'சுருக்கம்',t2:'முழுமை',t3:'மேற்கோள்',t4:'மார்க்டவுன்',
+   sahih:'ஸஹீஹ்',hasan:'ஹஸன்',daif:'ளயீஃப்',other:'பிற',ungraded:'தரம் பதிவு செய்யப்படவில்லை',
+   loading:'ஏற்றுகிறது…',fail:'மூலத்தை அணுக முடியவில்லை',retry:'மீண்டும் முயற்சி',
+   lColl:'தொகுப்புகள் · வெளிப்புறம் · அளவின்படி',lSec:'இத்தொகுப்பின் அத்தியாயங்கள்',lGrade:'இந்த அத்தியாயத்தின் தரங்கள்',
+   draft:'இந்த மொழிபெயர்ப்பு வரைவு — திருத்தங்கள் வரவேற்கப்படுகின்றன',
+   sup:'இஸ்லாமிய அறிவு அனைவருக்கும் கிடைக்க உதவுங்கள். இலவசம், விளம்பரம் இல்லை, கணக்கு இல்லை. %s ஆண்டுக்கு $37 செலவாகிறது — நிரல் திறந்தது.',
+   supCta:'மேம்பாட்டை ஆதரிக்கவும்'}},
+};
+
+const KOFI='https://ko-fi.com/openmushaf';
+const lsGet=k=>{try{return localStorage.getItem(k);}catch(e){return null;}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
+
+function detectLang(){
+  const s=lsGet('sunnah.lang'); if(s&&LANGS[s]) return s;
+  for(const l of (navigator.languages||['en'])){const c=String(l).toLowerCase().split('-')[0]; if(LANGS[c]) return c;}
+  return 'en';
+}
+const state={lang:detectLang(),mode:'section',coll:'bukhari',sec:1,sel:null,tab:'full'};
+const L=()=>LANGS[state.lang]; const T=k=>L().s[k];
+
+/* ══ grade normalisation ══════════════════════════════════
+   Grades are free text and vary by scholar: "Sahih", "Hasan Sahih",
+   "Sahih Bukhari (1224)". Bucketing is a display aid — the exact wording
+   and the scholar's name are always shown verbatim beside it. */
+function bucket(g){
+  const t=String(g||'').toLowerCase();
+  if(/da[’'\u02bc\u2019]?if|daif|weak|munkar|matruk|mawdu|ضعيف|منكر/.test(t)) return 'daif';
+  if(/hasan|حسن/.test(t) && !/sahih|صحيح/.test(t)) return 'hasan';
+  if(/sahih|صحيح|bukhari|muslim/.test(t)) return 'sahih';
+  if(/hasan/.test(t)) return 'hasan';
+  return 'other';
+}
+
+const statusEl=$('#status'),dot=$('#dot'),statusText=$('#statusText');
+function setStatus(k,t,retry){
+  statusEl.classList.remove('hidden');
+  dot.className='dot'+(k==='warn'?' warn':'');statusText.textContent=t;
+  const o=statusEl.querySelector('button'); if(o)o.remove();
+  if(retry){const b=document.createElement('button');b.textContent=T('retry');b.onclick=retry;statusEl.appendChild(b);}
+}
+const hideStatus=()=>statusEl.classList.add('hidden');
+
+async function getJSON(u){const r=await fetch(u); if(!r.ok) throw new Error('HTTP '+r.status); return r.json();}
+
+/* ══ data ═════════════════════════════════════════════════ */
+const cache={};
+function edFor(lang,coll){
+  const c=COLL[coll]; const want=LANGS[lang].code;
+  return (c.langs.includes(want)?want:'eng')+'-'+coll;
+}
+async function loadColl(coll,lang){
+  const ed=edFor(lang,coll), key=ed;
+  if(cache[key]) return cache[key];
+  setStatus('',T('loading'));
+  const [tr,ar]=await Promise.all([
+    getJSON(`${CDN}/editions/${ed}.min.json`),
+    getJSON(`${CDN}/editions/ara-${coll}.min.json`).catch(()=>null),
+  ]);
+  const arBy={}; if(ar&&ar.hadiths) ar.hadiths.forEach(h=>arBy[h.hadithnumber]=h.text);
+  const secs=tr.metadata.section||{}, det=tr.metadata.section_detail||{};
+  const list=Object.keys(secs).filter(k=>secs[k]&&String(secs[k]).trim()).map(Number).sort((a,b)=>a-b);
+  return cache[key]={ed,name:tr.metadata.name,hadiths:tr.hadiths,arBy,secs,det,list,
+                     dir:LANGS[lang].dir==='rtl'?'rtl':'ltr'};
+}
+const inSection=(d,s)=>{
+  const dd=d.det[s]; if(!dd) return [];
+  return d.hadiths.filter(h=>h.hadithnumber>=dd.hadithnumber_first&&h.hadithnumber<=dd.hadithnumber_last);
+};
+
+/* ══ ornament ═════════════════════════════════════════════ */
+const cv=$('#clock'),g2=cv.getContext('2d');
+let W=0,H=0,S=1; const TAU=Math.PI*2;
+function sizeClock(){const r=cv.getBoundingClientRect();S=Math.min(devicePixelRatio||1,2);
+  W=Math.max(1,Math.round(r.width));H=Math.max(1,Math.round(r.height));
+  cv.width=W*S;cv.height=H*S;g2.setTransform(S,0,0,S,0,0);paint();}
+addEventListener('resize',sizeClock);
+const GC={sahih:'143,211,168',hasan:'159,196,232',daif:'232,154,142',other:'239,227,204'};
+function seg(cx,cy,U,r0,r1,a0,a1,fill,stroke){
+  g2.beginPath();g2.arc(cx,cy,U*r1,a0,a1);g2.arc(cx,cy,U*r0,a1,a0,true);g2.closePath();
+  g2.fillStyle=fill;g2.fill();
+  if(stroke){g2.strokeStyle='rgba(11,8,20,.85)';g2.lineWidth=1;g2.stroke();}
+}
+let collSizes=null;
+function paint(){
+  if(!W) return;
+  const cx=W/2,cy=H/2,U=Math.min(W,H)/2;
+  g2.clearRect(0,0,W,H);
+  const keys=Object.keys(COLL);
+  const sizes=collSizes||keys.map(()=>1);
+  const total=sizes.reduce((a,b)=>a+b,0);
+  // outer: collections by size
+  let acc=0;
+  keys.forEach((k,i)=>{
+    const w=sizes[i]/total;
+    const a0=acc*TAU-Math.PI/2+.002,a1=(acc+w)*TAU-Math.PI/2-.002;acc+=w;
+    seg(cx,cy,U,.88,1,a0,a1,k===state.coll?'rgba(176,72,62,.95)':'rgba(51,66,126,.62)',false);
+  });
+  const d=cache[edFor(state.lang,state.coll)];
+  // middle: sections of the current collection
+  if(d&&d.list.length){
+    d.list.forEach((s,i)=>{
+      const a0=(i/d.list.length)*TAU-Math.PI/2,a1=((i+1)/d.list.length)*TAU-Math.PI/2;
+      seg(cx,cy,U,.72,.855,a0,a1,s===state.sec?'rgba(229,163,58,.9)':'rgba(51,66,126,.45)',d.list.length<=40);
+    });
+    // inner: grade distribution of this section
+    const hs=inSection(d,state.sec);
+    const tally={sahih:0,hasan:0,daif:0,other:0,none:0};
+    hs.forEach(h=>{const g=(h.grades||[]).filter(x=>x&&x.grade);
+      if(!g.length){tally.none++;return;} tally[bucket(g[0].grade)]++;});
+    const n=hs.length||1; let a=-Math.PI/2;
+    [['sahih',tally.sahih],['hasan',tally.hasan],['daif',tally.daif],['other',tally.other]].forEach(([k,v])=>{
+      if(!v)return; const w=v/n*TAU; seg(cx,cy,U,.42,.68,a,a+w,`rgba(${GC[k]},.8)`,true); a+=w;
+    });
+    if(tally.none){const w=tally.none/n*TAU;seg(cx,cy,U,.42,.68,a,a+w,'rgba(51,66,126,.5)',true);}
+    $('#pct').textContent=hs.length;
+    $('#pgs').textContent=(d.secs[state.sec]||'').slice(0,34);
+  }
+}
+cv.onclick=e=>{
+  const r=cv.getBoundingClientRect();
+  const x=e.clientX-r.left-W/2,y=e.clientY-r.top-H/2,U=Math.min(W,H)/2;
+  const dist=Math.hypot(x,y)/U; if(dist<.42) return;
+  let a=Math.atan2(y,x)+Math.PI/2; if(a<0)a+=TAU;
+  const keys=Object.keys(COLL);
+  if(dist>=.88){
+    const sizes=collSizes||keys.map(()=>1),total=sizes.reduce((p,q)=>p+q,0);
+    let acc=0; for(let i=0;i<keys.length;i++){acc+=sizes[i]/total; if(a/TAU<=acc){go(keys[i],1);return;}}
+    return;
+  }
+  const d=cache[edFor(state.lang,state.coll)];
+  if(d&&d.list.length&&dist>=.72){
+    const i=Math.min(d.list.length-1,Math.floor(a/TAU*d.list.length));
+    go(state.coll,d.list[i]);
+  }
+};
+
+/* ══ render ═══════════════════════════════════════════════ */
+const chev=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d==='l'?'M15 5 L8 12 L15 19':'M9 5 L16 12 L9 19'}"/></svg>`;
+
+function gradePills(h){
+  const g=(h.grades||[]).filter(x=>x&&x.grade);
+  if(!g.length) return `<span class="nograde">${esc(T('ungraded'))}</span>`;
+  return g.slice(0,3).map(x=>{
+    const b=bucket(x.grade);
+    return `<span class="g ${b}">${esc(x.grade)}<span class="who">${esc(x.name)}</span></span>`;
+  }).join('')+(g.length>3?`<span class="nograde">+${g.length-3}</span>`:'');
+}
+
+async function render(){
+  const d=await loadColl(state.coll,state.lang).catch(e=>{setStatus('warn',T('fail')+' — '+e.message,render);return null;});
+  if(!d) return;
+  hideStatus();
+  if(!d.det[state.sec]) state.sec=d.list[0]||1;
+  const hs=inSection(d,state.sec);
+  $('#sheet').classList.toggle('hide',state.mode!=='section');
+  $('#solo').classList.toggle('hide',state.mode!=='hadith');
+
+  if(state.mode==='section'){
+    $('#sheet').innerHTML=hs.map(h=>
+      `<div class="hrow par" data-n="${h.hadithnumber}">
+         <p class="a" dir="rtl" lang="ar">${esc(d.arBy[h.hadithnumber]||'')}</p>
+         <p class="t">${esc(h.text)}</p>
+         <div class="n"><span>${esc(d.name)} ${h.hadithnumber}</span>${gradePills(h)}</div>
+       </div>`).join('')||`<p style="opacity:.6;text-align:center;padding:30px">—</p>`;
+    document.querySelectorAll('.hrow').forEach(el=>el.onclick=()=>select(+el.dataset.n));
+    $('#where').textContent=`${T('section')} ${state.sec} · ${hs.length}`;
+    const i=d.list.indexOf(state.sec);
+    $('#prev').disabled=i<=0; $('#next').disabled=i>=d.list.length-1;
+  } else {
+    const h=d.hadiths.find(x=>x.hadithnumber===state.sel)||hs[0];
+    if(h){
+      state.sel=h.hadithnumber;
+      $('#soloAr').textContent=d.arBy[h.hadithnumber]||'';
+      $('#soloTr').textContent=h.text;
+      const g=(h.grades||[]).filter(x=>x&&x.grade);
+      $('#gtable').innerHTML=g.length
+        ? g.map(x=>`<div class="sch">${esc(x.name)}</div><div><span class="g ${bucket(x.grade)}">${esc(x.grade)}</span></div>`).join('')
+        : `<div></div><div class="nograde">${esc(T('ungraded'))}</div>`;
+      $('#soloMeta').innerHTML=[`<span class="hi">${esc(d.name)}</span>`,
+        `${T('section')} ${state.sec}`,`#${h.hadithnumber}`,
+        h.reference?`book ${h.reference.book} · hadith ${h.reference.hadith}`:''].filter(Boolean)
+        .join('<span style="opacity:.35">·</span>');
+      $('#where').textContent=`${esc(d.name)} ${h.hadithnumber}`;
+      const idx=d.hadiths.indexOf(h);
+      $('#prev').disabled=idx<=0; $('#next').disabled=idx>=d.hadiths.length-1;
+    }
+  }
+  $('#loc').textContent=`${d.name} · ${T('section')} ${state.sec}`;
+  $('#collSel').value=state.coll;
+  buildSecSel(d);
+  markSel(); study(); paint();
+  location.hash=`${state.coll}/${state.sec}`+(state.sel?'/'+state.sel:'');
+}
+function markSel(){document.querySelectorAll('.hrow').forEach(el=>el.classList.toggle('sel',+el.dataset.n===state.sel));}
+function select(n){state.sel=n;markSel();study();}
+
+/* ══ citation ═════════════════════════════════════════════ */
+const TABS=[['short','t1'],['full','t2'],['block','t3'],['markdown','t4']];
+function citation(){
+  const d=cache[edFor(state.lang,state.coll)]; if(!d||!state.sel) return '';
+  const h=d.hadiths.find(x=>x.hadithnumber===state.sel); if(!h) return '';
+  const g=(h.grades||[]).filter(x=>x&&x.grade);
+  const gStr=g.length?g.map(x=>`${x.grade} (${x.name})`).join('; '):T('ungraded');
+  const ref=`${d.name} ${h.hadithnumber}`;
+  const ar=d.arBy[h.hadithnumber]||'';
+  switch(state.tab){
+    case 'short': return ref;
+    case 'full': return `${ref}${h.reference?`, book ${h.reference.book}, hadith ${h.reference.hadith}`:''} — graded ${gStr}.`;
+    case 'block': return `${ar}\n\n"${h.text}"\n\n— ${ref}\nGrading: ${gStr}`;
+    default: return `> ${h.text}\n>\n> — *${ref}*\n> Grading: ${gStr}`;
+  }
+}
+function study(){
+  const d=$('#study');
+  if(!state.sel){d.innerHTML=`<span style="color:rgba(239,227,204,.66);font-size:13px">${esc(T('empty'))}</span>`;return;}
+  const c=cache[edFor(state.lang,state.coll)];
+  const h=c&&c.hadiths.find(x=>x.hadithnumber===state.sel);
+  if(!h) return;
+  d.innerHTML=`<div class="ref">${esc(c.name)} ${h.hadithnumber}${h.reference?` · book ${h.reference.book} · hadith ${h.reference.hadith}`:''}</div>`+
+    `<div class="n" style="display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:12px">${gradePills(h)}</div>`+
+    `<div class="tabs" role="tablist">${TABS.map(([k,lk])=>
+      `<button class="tab" type="button" role="tab" data-k="${k}" aria-selected="${k===state.tab}">${esc(T(lk))}</button>`).join('')}</div>`+
+    `<div class="cite" id="citeOut"></div>`+
+    `<div class="row"><button class="ghost" id="copyBtn">${esc(T('copy'))}</button>`+
+    `<button class="ghost" id="openBtn">${esc(T('open'))}</button>`+
+    `<button class="ghost" id="secBtn">${esc(T('see'))}</button></div>`;
+  paintCite();
+  d.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{state.tab=b.dataset.k;
+    d.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',String(x.dataset.k===state.tab)));paintCite();});
+  $('#copyBtn').onclick=async()=>{const b=$('#copyBtn');
+    try{await navigator.clipboard.writeText(citation());b.textContent=T('copied');}catch(e){}
+    setTimeout(()=>b.textContent=T('copy'),1600);};
+  $('#openBtn').onclick=()=>{state.mode='hadith';paintDensity();render();};
+  $('#secBtn').onclick=()=>{state.mode='section';paintDensity();render();};
+}
+function paintCite(){
+  const o=$('#citeOut'); if(!o)return; const t=citation();
+  if(state.tab==='block'){const [a,...r]=t.split('\n');o.innerHTML=`<span class="ai">${esc(a)}</span>`+esc(r.join('\n'));}
+  else o.textContent=t;
+}
+
+/* ══ chrome ═══════════════════════════════════════════════ */
+let fontLink=null;
+function applyLang(){
+  const l=L();
+  document.documentElement.lang=state.lang; document.documentElement.dir=l.dir;
+  if(l.font){if(!fontLink){fontLink=document.createElement('link');fontLink.rel='stylesheet';document.head.appendChild(fontLink);}
+    fontLink.href=`https://fonts.googleapis.com/css2?family=${l.font}&display=swap`;}
+  $('#tagline').textContent=T('tag');
+  $('#draftNote').textContent=l.rev?'':T('draft');
+  $('#l_lang').textContent=T('lang');$('#l_coll').textContent=T('coll');
+  $('#l_goto').textContent=T('goto');$('#l_grades').textContent=T('grades');
+  $('#randBtn').textContent=T('rand');$('#topBtn').textContent=T('top');
+  $('#prev').innerHTML=chev(l.dir==='rtl'?'r':'l');$('#next').innerHTML=chev(l.dir==='rtl'?'l':'r');
+  $('#density').innerHTML='';
+  [['section','m1','m1s'],['hadith','m2','m2s']].forEach(([k,a,b])=>{
+    const btn=document.createElement('button');btn.className='den';btn.type='button';btn.dataset.m=k;
+    btn.innerHTML=`<span class="t">${esc(T(a))}</span><span class="s">${esc(T(b))}</span>`;
+    btn.onclick=()=>{state.mode=k;paintDensity();render();};
+    $('#density').appendChild(btn);});
+  $('#legend').innerHTML=[['sahih',GC.sahih],['hasan',GC.hasan],['daif',GC.daif],['other',GC.other]]
+    .map(([k,c])=>`<i style="background:rgba(${c},.8)"></i><span>${esc(T(k))}</span>`).join('')
+    +`<i style="background:rgba(51,66,126,.62)"></i><span>${esc(T('lColl'))}</span>`;
+  $('#foot').innerHTML=
+    `<b>Every grading is shown with the scholar who gave it.</b> A hadith is not simply “authentic” — `+
+    `Al-Albani, Zubair Ali Zai and others often differ, and this site never collapses that into one verdict. `+
+    `Grade colours are a display aid; the exact wording and the scholar's name are always shown verbatim.<br><br>`+
+    `Text, translations and gradings from <a href="https://github.com/fawazahmed0/hadith-api" target="_blank" rel="noopener">hadith-api</a> via jsDelivr. `+
+    `Ten collections; hadith text exists in nine languages, so the interface offers only those. `+
+    `Nothing here is machine-translated — every translation is a published work.<br>`+
+    `<span style="opacity:.85">A collection loads once, then reading is instant and offline. Bukhari and Muslim are large; the shorter collections are quick.</span>`+
+    `<div class="support">${esc(T('sup')).replace('%s','Open Sunnah')} `+
+    `<a href="${KOFI}" target="_blank" rel="noopener">${esc(T('supCta'))} ${l.dir==='rtl'?'←':'→'}</a></div>`;
+  paintDensity();
+}
+function paintDensity(){[...$('#density').children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.m===state.mode)));}
+function buildSecSel(d){
+  const s=$('#secSel'); if(s.dataset.for===d.ed) {s.value=state.sec; return;}
+  s.dataset.for=d.ed; s.innerHTML='';
+  d.list.forEach(n=>s.appendChild(Object.assign(document.createElement('option'),
+    {value:n,textContent:`${n} · ${d.secs[n]}`})));
+  s.value=state.sec;
+  s.onchange=()=>go(state.coll,+s.value);
+}
+async function go(coll,sec,sel){state.coll=coll;state.sec=sec;state.sel=sel||null;await render();}
+
+$('#prev').onclick=()=>{
+  const d=cache[edFor(state.lang,state.coll)]; if(!d)return;
+  if(state.mode==='section'){const i=d.list.indexOf(state.sec); if(i>0) go(state.coll,d.list[i-1]);}
+  else{const i=d.hadiths.findIndex(x=>x.hadithnumber===state.sel); if(i>0){state.sel=d.hadiths[i-1].hadithnumber;render();}}
+};
+$('#next').onclick=()=>{
+  const d=cache[edFor(state.lang,state.coll)]; if(!d)return;
+  if(state.mode==='section'){const i=d.list.indexOf(state.sec); if(i<d.list.length-1) go(state.coll,d.list[i+1]);}
+  else{const i=d.hadiths.findIndex(x=>x.hadithnumber===state.sel); if(i<d.hadiths.length-1){state.sel=d.hadiths[i+1].hadithnumber;render();}}
+};
+$('#numIn').onchange=()=>{
+  const d=cache[edFor(state.lang,state.coll)]; if(!d)return;
+  const n=+$('#numIn').value; const h=d.hadiths.find(x=>x.hadithnumber===n); if(!h)return;
+  const sec=d.list.find(s=>d.det[s]&&n>=d.det[s].hadithnumber_first&&n<=d.det[s].hadithnumber_last)||state.sec;
+  state.mode='hadith';paintDensity();go(state.coll,sec,n);
+};
+$('#randBtn').onclick=()=>{
+  const d=cache[edFor(state.lang,state.coll)]; if(!d||!d.hadiths.length)return;
+  const h=d.hadiths[Math.floor(Math.random()*d.hadiths.length)];
+  const sec=d.list.find(s=>d.det[s]&&h.hadithnumber>=d.det[s].hadithnumber_first&&h.hadithnumber<=d.det[s].hadithnumber_last)||state.sec;
+  state.mode='hadith';paintDensity();go(state.coll,sec,h.hadithnumber);
+};
+$('#topBtn').onclick=()=>{state.mode='section';paintDensity();state.sel=null;render();window.scrollTo({top:0,behavior:'smooth'});};
+addEventListener('keydown',e=>{
+  if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;
+  if(e.key==='ArrowLeft'){e.preventDefault();$(L().dir==='rtl'?'#prev':'#next').click();}
+  if(e.key==='ArrowRight'){e.preventDefault();$(L().dir==='rtl'?'#next':'#prev').click();}
+});
+
+/* ══ boot ═════════════════════════════════════════════════ */
+async function boot(){
+  applyLang();
+  const ls=$('#langSel');
+  Object.entries(LANGS).forEach(([c,l])=>ls.appendChild(Object.assign(document.createElement('option'),{value:c,textContent:l.name})));
+  ls.value=state.lang;
+  ls.onchange=async()=>{state.lang=ls.value;lsSet('sunnah.lang',state.lang);applyLang();sizeClock();await render();};
+
+  const cs=$('#collSel');
+  Object.entries(COLL).forEach(([k,v])=>cs.appendChild(Object.assign(document.createElement('option'),
+    {value:k,textContent:v.en})));
+  cs.onchange=()=>go(cs.value,1);
+
+  const m=/^#([a-z]+)\/(\d+)(?:\/(\d+))?$/.exec(location.hash);
+  if(m&&COLL[m[1]]){state.coll=m[1];state.sec=+m[2];if(m[3]){state.sel=+m[3];state.mode='hadith';}}
+  paintDensity(); sizeClock();
+  await render();
+  // size the outer ring once the collections are known
+  collSizes=Object.keys(COLL).map(k=>{
+    const d=cache[edFor(state.lang,k)]; return d?Math.sqrt(d.hadiths.length):Math.sqrt(500);
+  });
+  paint();
+}
+boot();
+})();
+</script>
+</html>
