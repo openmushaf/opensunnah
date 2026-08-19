@@ -41,7 +41,6 @@
   .ar-title{font-family:var(--arabic);font-size:clamp(1.15rem,2.6vw,1.5rem);color:var(--saffron);opacity:.85;line-height:1}
   .loc{font-family:var(--display);font-style:italic;font-size:15px;color:rgba(239,227,204,.72);
        padding-inline-start:.7em;border-inline-start:1px solid rgba(229,163,58,.35)}
-  .tagline{margin-inline-start:auto;font-size:12.5px;color:rgba(239,227,204,.62)}
   .rule{height:1px;background:linear-gradient(90deg,transparent,rgba(229,163,58,.3) 8%,rgba(229,163,58,.3) 92%,transparent);margin:0 0 18px}
 
   .density{display:flex;border:1px solid rgba(239,227,204,.13);border-radius:3px;overflow:hidden;width:max-content;margin-bottom:18px;max-width:100%}
@@ -183,7 +182,6 @@
   <header>
     <h1 id="brand">Open Sunnah</h1><span class="ar-title">السنّة</span>
     <span class="loc" id="loc"></span>
-    <span class="tagline" id="tagline">no account · no tracking · nothing leaves this device</span>
   </header>
   <div class="rule"></div>
 
@@ -269,7 +267,6 @@ const COLL={
    Offering a UI language with no content behind it would be a false promise. */
 const LANGS={
  en:{name:'English',code:'eng',dir:'ltr',rev:true,s:{
-   tag:'no account · no tracking · nothing leaves this device',
    m1:'Section',m1s:'read through a book',m2:'Hadith',m2s:'study · grade · cite',
    lang:'Language',coll:'Collection',section:'Section',goto:'Go to hadith',
    grades:'Gradings',rand:'Random',top:'Top of section',
@@ -283,7 +280,6 @@ const LANGS={
    sup:'Help keep Islamic knowledge accessible. Free, no ads, no account. %s costs $37 a year to run — the code is open.',
    supCta:'Support development'}},
  ar:{name:'العربية',code:'ara',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{
-   tag:'بلا حساب · بلا تتبّع · لا شيء يغادر جهازك',
    m1:'باب',m1s:'قراءة الكتاب',m2:'حديث',m2s:'دراسة · درجة · اقتباس',
    lang:'اللغة',coll:'المجموعة',section:'الباب',goto:'انتقل إلى حديث',
    grades:'الدرجات',rand:'عشوائي',top:'أول الباب',
@@ -297,7 +293,6 @@ const LANGS={
    sup:'ساهم في إبقاء المعرفة الإسلامية في متناول الجميع. مجاني، بلا إعلانات، بلا حساب. %s يكلّف ٣٧ دولاراً في السنة — والشيفرة مفتوحة.',
    supCta:'ادعم التطوير'}},
  ur:{name:'اردو',code:'urd',dir:'rtl',rev:false,font:'Noto+Nastaliq+Urdu:wght@400;600',s:{
-   tag:'کوئی اکاؤنٹ نہیں · کوئی ٹریکنگ نہیں · کچھ بھی اس ڈیوائس سے باہر نہیں جاتا',
    m1:'باب',m1s:'کتاب پڑھیں',m2:'حدیث',m2s:'مطالعہ · درجہ · حوالہ',
    lang:'زبان',coll:'مجموعہ',section:'باب',goto:'حدیث پر جائیں',
    grades:'درجات',rand:'بے ترتیب',top:'باب کا آغاز',
@@ -311,7 +306,6 @@ const LANGS={
    sup:'اسلامی علم کو سب کی رسائی میں رکھنے میں مدد کریں۔ مفت، کوئی اشتہار نہیں، کوئی اکاؤنٹ نہیں۔ %s پر سالانہ ۳۷ ڈالر لاگت آتی ہے — کوڈ کھلا ہے۔',
    supCta:'ترقی میں تعاون کریں'}},
  id:{name:'Bahasa Indonesia',code:'ind',dir:'ltr',rev:false,s:{
-   tag:'tanpa akun · tanpa pelacakan · tidak ada yang keluar dari perangkat ini',
    m1:'Bab',m1s:'baca satu kitab',m2:'Hadis',m2s:'telaah · derajat · kutip',
    lang:'Bahasa',coll:'Kitab',section:'Bab',goto:'Buka hadis',
    grades:'Derajat',rand:'Acak',top:'Awal bab',
@@ -325,7 +319,6 @@ const LANGS={
    sup:'Bantu jaga ilmu Islam tetap terjangkau. Gratis, tanpa iklan, tanpa akun. %s menghabiskan $37 per tahun — kodenya terbuka.',
    supCta:'Dukung pengembangan'}},
  bn:{name:'বাংলা',code:'ben',dir:'ltr',rev:false,font:'Noto+Serif+Bengali:wght@400;600&family=Noto+Sans+Bengali:wght@400;600',s:{
-   tag:'কোনো অ্যাকাউন্ট নয় · কোনো ট্র্যাকিং নয় · কিছুই এই ডিভাইস ছাড়ে না',
    m1:'অধ্যায়',m1s:'একটি কিতাব পড়ুন',m2:'হাদিস',m2s:'অধ্যয়ন · মান · উদ্ধৃতি',
    lang:'ভাষা',coll:'সংকলন',section:'অধ্যায়',goto:'হাদিসে যান',
    grades:'মান',rand:'এলোমেলো',top:'অধ্যায়ের শুরু',
@@ -339,7 +332,6 @@ const LANGS={
    sup:'ইসলামি জ্ঞান সবার নাগালে রাখতে সাহায্য করুন। বিনামূল্যে, বিজ্ঞাপন নেই, অ্যাকাউন্ট নেই। %s চালাতে বছরে $37 লাগে — কোড উন্মুক্ত।',
    supCta:'উন্নয়নে সহায়তা করুন'}},
  tr:{name:'Türkçe',code:'tur',dir:'ltr',rev:false,s:{
-   tag:'hesap yok · takip yok · hiçbir şey bu cihazdan çıkmaz',
    m1:'Bölüm',m1s:'bir kitabı oku',m2:'Hadis',m2s:'incele · derece · alıntıla',
    lang:'Dil',coll:'Külliyat',section:'Bölüm',goto:'Hadise git',
    grades:'Dereceler',rand:'Rastgele',top:'Bölüm başı',
@@ -353,7 +345,6 @@ const LANGS={
    sup:'İslami ilmin herkese açık kalmasına yardım edin. Ücretsiz, reklamsız, hesapsız. %s yılda 37 dolara mal oluyor — kod açık.',
    supCta:'Geliştirmeyi destekle'}},
  fr:{name:'Français',code:'fra',dir:'ltr',rev:false,s:{
-   tag:'pas de compte · pas de suivi · rien ne quitte cet appareil',
    m1:'Chapitre',m1s:'lire un livre',m2:'Hadith',m2s:'étudier · degré · citer',
    lang:'Langue',coll:'Recueil',section:'Chapitre',goto:'Aller au hadith',
    grades:'Degrés',rand:'Aléatoire',top:'Début du chapitre',
@@ -367,7 +358,6 @@ const LANGS={
    sup:'Aidez à garder le savoir islamique accessible. Gratuit, sans publicité, sans compte. %s coûte 37 $ par an — le code est ouvert.',
    supCta:'Soutenir le développement'}},
  ru:{name:'Русский',code:'rus',dir:'ltr',rev:false,s:{
-   tag:'без аккаунта · без слежки · ничто не покидает это устройство',
    m1:'Глава',m1s:'читать книгу',m2:'Хадис',m2s:'разбор · степень · ссылка',
    lang:'Язык',coll:'Сборник',section:'Глава',goto:'Перейти к хадису',
    grades:'Степени достоверности',rand:'Случайный',top:'Начало главы',
@@ -381,7 +371,6 @@ const LANGS={
    sup:'Помогите сохранить исламское знание доступным. Бесплатно, без рекламы, без аккаунта. %s стоит $37 в год — код открыт.',
    supCta:'Поддержать разработку'}},
  ta:{name:'தமிழ்',code:'tam',dir:'ltr',rev:false,font:'Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Tamil:wght@400;600',s:{
-   tag:'கணக்கு இல்லை · கண்காணிப்பு இல்லை · எதுவும் இந்தச் சாதனத்தை விட்டு வெளியேறாது',
    m1:'அத்தியாயம்',m1s:'ஒரு நூலைப் படி',m2:'ஹதீஸ்',m2s:'ஆய்வு · தரம் · மேற்கோள்',
    lang:'மொழி',coll:'தொகுப்பு',section:'அத்தியாயம்',goto:'ஹதீஸுக்குச் செல்',
    grades:'தரங்கள்',rand:'சீரற்ற',top:'அத்தியாயத் தொடக்கம்',
@@ -638,7 +627,6 @@ function applyLang(){
   document.documentElement.lang=state.lang; document.documentElement.dir=l.dir;
   if(l.font){if(!fontLink){fontLink=document.createElement('link');fontLink.rel='stylesheet';document.head.appendChild(fontLink);}
     fontLink.href=`https://fonts.googleapis.com/css2?family=${l.font}&display=swap`;}
-  $('#tagline').textContent=T('tag');
   $('#draftNote').textContent=l.rev?'':T('draft');
   $('#l_lang').textContent=T('lang');$('#l_coll').textContent=T('coll');
   $('#l_goto').textContent=T('goto');$('#l_grades').textContent=T('grades');
