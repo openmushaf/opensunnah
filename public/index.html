@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <meta charset="utf-8">
-<meta name="description" content="A free, open hadith reader. Ten collections, nine languages, every grading shown with the scholar who gave it. No account, no tracking.">
+<meta name="description" content="A free, open hadith reader. Ten collections, 26 languages, every grading shown with the scholar who gave it. No account, no tracking.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open Sunnah — a free, open hadith reader</title>
 <link rel="canonical" href="https://opensunnah.org/">
@@ -188,6 +188,7 @@
 </style>
 
 <div class="wrap">
+  <noscript><p style="max-width:60ch;margin:0 auto 28px;padding:16px 18px;border:1px solid rgba(229,163,58,.3);border-radius:3px;line-height:1.7;font-size:14px">Open Sunnah is a free, open hadith reader — ten collections, 26 interface languages, and every grading shown with the scholar who gave it. It needs JavaScript to run. Nothing here tracks you, and no account is required.</p></noscript>
   <header>
     <h1 id="brand">Open Sunnah</h1><span class="ar-title">السنّة</span>
     <span class="loc" id="loc"></span>
@@ -642,11 +643,17 @@ const LANGS={
 };
 
 const KOFI='https://ko-fi.com/openmushaf';
+const LKEY='sunnah.lang', PKEY='sunnah.place.v1';
+let mem=null;   /* private browsing and quota both throw; hold the place in memory rather than losing it */
 const lsGet=k=>{try{return localStorage.getItem(k);}catch(e){return null;}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
+function loadPlace(){ try{const r=lsGet(PKEY); return r?JSON.parse(r):mem;}catch(e){return mem;} }
+/* mem is set unconditionally: lsSet swallows its own exception, so a catch here
+   would never fire. localStorage is best-effort; memory is the session copy. */
+function savePlace(p){ mem=p; lsSet(PKEY,JSON.stringify(p)); }
 
 function detectLang(){
-  const s=lsGet('sunnah.lang'); if(s&&LANGS[s]) return s;
+  const s=lsGet(LKEY); if(s&&LANGS[s]) return s;
   for(const l of (navigator.languages||['en'])){const c=String(l).toLowerCase().split('-')[0]; if(LANGS[c]) return c;}
   return 'en';
 }
@@ -829,6 +836,7 @@ async function render(){
   $('#collSel').value=state.coll;
   buildSecSel(d);
   markSel(); study(); paint();
+  savePlace({coll:state.coll,sec:state.sec,sel:state.sel});
   location.hash=`${state.coll}/${state.sec}`+(state.sel?'/'+state.sel:'');
 }
 function markSel(){document.querySelectorAll('.hrow').forEach(el=>el.classList.toggle('sel',+el.dataset.n===state.sel));}
@@ -889,6 +897,12 @@ function applyLang(){
   $('#draftNote').textContent=l.rev?'':T('draft');
   $('#l_lang').textContent=T('lang');$('#l_coll').textContent=T('coll');
   $('#l_goto').textContent=T('goto');$('#l_grades').textContent=T('grades');
+  /* the visible eyebrows are separate elements, so the controls themselves have
+     no accessible name — label them from the same locale strings */
+  $('#langSel').setAttribute('aria-label',T('lang'));
+  $('#collSel').setAttribute('aria-label',T('coll'));
+  $('#secSel').setAttribute('aria-label',T('section'));
+  $('#numIn').setAttribute('aria-label',T('goto'));
   $('#randBtn').textContent=T('rand');$('#topBtn').textContent=T('top');
   $('#prev').innerHTML=chev(l.dir==='rtl'?'r':'l');$('#next').innerHTML=chev(l.dir==='rtl'?'l':'r');
   $('#density').innerHTML='';
@@ -958,7 +972,7 @@ async function boot(){
   const ls=$('#langSel');
   Object.entries(LANGS).forEach(([c,l])=>ls.appendChild(Object.assign(document.createElement('option'),{value:c,textContent:l.name})));
   ls.value=state.lang;
-  ls.onchange=async()=>{state.lang=ls.value;lsSet('sunnah.lang',state.lang);applyLang();sizeClock();await render();};
+  ls.onchange=async()=>{state.lang=ls.value;lsSet(LKEY,state.lang);applyLang();sizeClock();await render();};
 
   const cs=$('#collSel');
   Object.entries(COLL).forEach(([k,v])=>cs.appendChild(Object.assign(document.createElement('option'),
@@ -967,6 +981,13 @@ async function boot(){
 
   const m=/^#([a-z]+)\/(\d+)(?:\/(\d+))?$/.exec(location.hash);
   if(m&&COLL[m[1]]){state.coll=m[1];state.sec=+m[2];if(m[3]){state.sel=+m[3];state.mode='hadith';}}
+  else{
+    /* a shared link wins over the stored place; mode is a fresh choice each visit.
+       render() re-checks the section against d.list, so a stale section falls back
+       to the collection's first rather than painting an empty one. */
+    const p=loadPlace();
+    if(p&&COLL[p.coll]){ state.coll=p.coll; if(Number.isInteger(p.sec)) state.sec=p.sec; if(Number.isInteger(p.sel)) state.sel=p.sel; }
+  }
   paintDensity(); sizeClock();
   await render();
   // size the outer ring once the collections are known
