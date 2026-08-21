@@ -127,7 +127,7 @@
   .turn svg{width:19px;height:19px}
   .turn:hover{background:rgba(229,163,58,.2);border-color:var(--saffron);color:var(--saffron)}
   .turn:focus-visible{outline:2px solid var(--saffron);outline-offset:3px}
-  .turn[disabled]{opacity:.34;cursor:not-allowed}
+  .turn[disabled],.ghost[disabled],input[disabled]{opacity:.34;cursor:not-allowed}
   .where{font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--pearl);min-width:190px;text-align:center;direction:ltr}
 
   /* ── rail ──────────────────────────────────────────── */
@@ -729,24 +729,102 @@ function edFor(lang,coll){
   const c=COLL[coll]; const want=LANGS[lang].code;
   return (c.langs.includes(want)?want:'eng')+'-'+coll;
 }
+/* Bundled files under /data are plain JSON, not CDN envelopes. */
+const getLocal=async u=>{const r=await fetch(u);
+  if(!r.ok) throw new Error('HTTP '+r.status); return r.json();};
+
+/* The three Forty-collections ship with the site; the other seven are 10.7 MB
+   gzipped between them and stay remote. */
+const BUNDLED=new Set(['nawawi','qudsi','dehlawi']);
+/* Bookkeeping lives here, not on the cache entry — every consumer reads the
+   same eight fields it always did, whichever stage the entry is at. */
+const fullEds=new Set();      // ed keys whose hadiths[] is the complete edition
+const loadedSecs={};          // ed key -> Set of section numbers already merged
+
+/* membership by reference.book — the declared section ranges disagree with it
+   in Bukhari section 0 (declared 0-0, actually 311 hadiths) */
+function indexByBook(hs){
+  const m={};
+  hs.forEach(h=>{const b=h.reference&&h.reference.book;
+    if(b===undefined||b===null) return; (m[b]=m[b]||[]).push(h);});
+  return m;
+}
+const arIndex=ar=>{const m={}; if(ar&&ar.hadiths) ar.hadiths.forEach(h=>m[h.hadithnumber]=h.text); return m;};
+
 async function loadColl(coll,lang){
   const ed=edFor(lang,coll), key=ed;
   if(cache[key]) return cache[key];
   setStatus('',T('loading'));
-  const [tr,ar]=await Promise.all([
+
+  if(BUNDLED.has(coll)){
+    const [tr,ar]=await Promise.all([
+      getLocal(`/data/editions/${ed}.json`),
+      getLocal(`/data/editions/ara-${coll}.json`).catch(()=>null)]);
+    const secs=tr.metadata.sections||tr.metadata.section||{};
+    const byBook=indexByBook(tr.hadiths);
+    const list=Object.keys(secs).map(Number).filter(n=>(byBook[n]||[]).length).sort((a,b)=>a-b);
+    fullEds.add(key); loadedSecs[key]=new Set(list);
+    return cache[key]={ed,name:tr.metadata.name,hadiths:tr.hadiths,arBy:arIndex(ar),secs,byBook,list,
+                       dir:LANGS[lang].dir==='rtl'?'rtl':'ltr'};
+  }
+
+  /* stage one — index plus the one section being read. A failure here still
+     reaches render()'s catch, so T('fail') and retry behave as before. */
+  const idx=await getLocal(`/data/index/${coll}.json`);
+  const first=idx.list.includes(state.sec)?state.sec:idx.list[0];
+  const [s1,a1]=await Promise.all([
+    getJSON(`${CDN}/editions/${ed}/sections/${first}.json`),
+    getJSON(`${CDN}/editions/ara-${coll}/sections/${first}.json`).catch(()=>null)]);
+  const hadiths=s1.hadiths||[];
+  loadedSecs[key]=new Set([first]);
+  const d=cache[key]={ed,name:idx.name,hadiths,arBy:arIndex(a1),secs:idx.sections,
+                      byBook:indexByBook(hadiths),list:idx.list,
+                      dir:LANGS[lang].dir==='rtl'?'rtl':'ltr'};
+  stageTwo(key,coll,ed);
+  return d;
+}
+
+/* stage two — the whole edition, in the background. On arrival the entry holds
+   exactly what today's single-stage load produced. If it never arrives, stage
+   one keeps working and the three whole-edition controls stay disabled. */
+function stageTwo(key,coll,ed){
+  Promise.all([
     getJSON(`${CDN}/editions/${ed}.min.json`),
-    getJSON(`${CDN}/editions/ara-${coll}.min.json`).catch(()=>null),
-  ]);
-  const arBy={}; if(ar&&ar.hadiths) ar.hadiths.forEach(h=>arBy[h.hadithnumber]=h.text);
-  const secs=tr.metadata.sections||tr.metadata.section||{};
-  // membership by reference.book — the declared section ranges disagree with it
-  // in Bukhari section 0 (declared 0-0, actually 311 hadiths)
-  const byBook={};
-  tr.hadiths.forEach(h=>{const b=h.reference&&h.reference.book;
-    if(b===undefined||b===null) return; (byBook[b]=byBook[b]||[]).push(h);});
-  const list=Object.keys(secs).map(Number).filter(n=>(byBook[n]||[]).length).sort((a,b)=>a-b);
-  return cache[key]={ed,name:tr.metadata.name,hadiths:tr.hadiths,arBy,secs,byBook,list,
-                     dir:LANGS[lang].dir==='rtl'?'rtl':'ltr'};
+    getJSON(`${CDN}/editions/ara-${coll}.min.json`).catch(()=>null)
+  ]).then(([tr,ar])=>{
+    const d=cache[key]; if(!d) return;
+    /* decide BEFORE swapping: once byBook is replaced every section looks
+       populated, and the question is whether it looked empty to the reader */
+    const onScreen=cache[edFor(state.lang,state.coll)]===d;
+    const wasEmpty=onScreen&&!inSection(d,state.sec).length;
+    d.hadiths=tr.hadiths; d.arBy=arIndex(ar); d.byBook=indexByBook(tr.hadiths);
+    fullEds.add(key); loadedSecs[key]=new Set(d.list);
+    syncControls();
+    /* only repaint if the reader was looking at something that would change —
+       a section stage one never fetched. Never yank a page mid-read. */
+    if(wasEmpty) render();
+  }).catch(()=>{ /* stage one stands; controls stay disabled */ });
+}
+
+/* a section the reader navigated to before the whole edition landed */
+async function ensureSection(d,coll,s){
+  const key=d.ed;
+  if(fullEds.has(key)||!loadedSecs[key]||loadedSecs[key].has(s)||!d.list.includes(s)) return;
+  const [sx,ax]=await Promise.all([
+    getJSON(`${CDN}/editions/${d.ed}/sections/${s}.json`),
+    getJSON(`${CDN}/editions/ara-${coll}/sections/${s}.json`).catch(()=>null)]);
+  if(ax&&ax.hadiths) ax.hadiths.forEach(h=>d.arBy[h.hadithnumber]=h.text);
+  const have=new Set(d.hadiths.map(h=>h.hadithnumber));
+  (sx.hadiths||[]).forEach(h=>{ if(!have.has(h.hadithnumber)) d.hadiths.push(h); });
+  d.byBook=indexByBook(d.hadiths);
+  loadedSecs[key].add(s);
+}
+
+/* Random, Go-to-hadith and hadith-mode paging read the whole edition. Until it
+   lands they would act on a fraction of it, so disable rather than mislead. */
+function syncControls(){
+  const key=edFor(state.lang,state.coll), on=fullEds.has(key);
+  $('#randBtn').disabled=!on; $('#numIn').disabled=!on;
 }
 const inSection=(d,s)=>d.byBook[s]||[];
 
@@ -848,6 +926,10 @@ async function render(){
   $('#draftNote').textContent=[L().rev?'':T('draft'), usedFallback?T('noText'):'']
     .filter(Boolean).join(' · ');
   if(d.list.length && !d.list.includes(state.sec)) state.sec=d.list[0];
+  /* the reader may have moved to a section stage one did not fetch */
+  await ensureSection(d,state.coll,state.sec)
+    .catch(e=>{setStatus('warn',T('fail')+' — '+e.message,render);});
+  syncControls();
   const hs=inSection(d,state.sec);
   $('#sheet').classList.toggle('hide',state.mode!=='section');
   $('#solo').classList.toggle('hide',state.mode!=='hadith');
