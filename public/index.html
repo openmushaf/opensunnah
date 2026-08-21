@@ -185,6 +185,18 @@
     select,input{min-height:44px}
     .clockwrap{max-width:250px}
   }
+
+  /* Last rule in the sheet so it wins on source order. .01ms rather than 0:
+     a zero duration can suppress transitionend, which future code may rely on.
+     The canvas is not guarded — it repaints on state change, never on a timer,
+     and the grading rings are data rather than decoration. */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:.01ms!important;
+      animation-iteration-count:1!important;
+      transition-duration:.01ms!important;
+      scroll-behavior:auto!important}
+  }
 </style>
 
 <div class="wrap">
@@ -997,7 +1009,10 @@ $('#randBtn').onclick=()=>{
   const sec=(h.reference&&h.reference.book!=null)?h.reference.book:state.sec;
   state.mode='hadith';paintDensity();go(state.coll,sec,h.hadithnumber);
 };
-$('#topBtn').onclick=()=>{state.mode='section';paintDensity();state.sel=null;render();window.scrollTo({top:0,behavior:'smooth'});};
+/* a CSS scroll-behavior rule does not reach behavior:'smooth' passed to
+   scrollTo, so the call has to ask as well */
+const reduceMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+$('#topBtn').onclick=()=>{state.mode='section';paintDensity();state.sel=null;render();window.scrollTo({top:0,behavior:reduceMotion()?'auto':'smooth'});};
 addEventListener('keydown',e=>{
   if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;
   if(e.key==='ArrowLeft'){e.preventDefault();$(L().dir==='rtl'?'#prev':'#next').click();}
