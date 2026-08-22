@@ -10,6 +10,9 @@
 <link rel="apple-touch-icon" href="/opensunnah-apple-touch-icon.png">
 <link rel="manifest" href="/opensunnah.webmanifest">
 <meta name="theme-color" content="#120E1D">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://opensunnah.org/#website","url":"https://opensunnah.org/","name":"Open Sunnah","description":"A free, open hadith reader. Ten collections, 26 languages, every grading shown with the scholar who gave it. No account, no tracking.","inLanguage":["ar","en"],"isAccessibleForFree":true},{"@type":"Collection","@id":"https://opensunnah.org/#collection","name":"Hadith collections","isPartOf":{"@id":"https://opensunnah.org/#website"},"hasPart":[{"@type":"Book","name":"صحيح البخاري","alternateName":"Sahih al-Bukhari","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"صحيح مسلم","alternateName":"Sahih Muslim","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"سنن أبي داود","alternateName":"Sunan Abu Dawud","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"جامع الترمذي","alternateName":"Jami at-Tirmidhi","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"سنن النسائي","alternateName":"Sunan an-Nasai","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"سنن ابن ماجه","alternateName":"Sunan Ibn Majah","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"موطأ مالك","alternateName":"Muwatta Malik","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"الأربعون النووية","alternateName":"Forty Hadith of an-Nawawi","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"الأربعون القدسية","alternateName":"Forty Hadith Qudsi","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"أربعون ولي الله الدهلوي","alternateName":"Forty Hadith of Shah Waliullah","inLanguage":"ar","isAccessibleForFree":true}]}]}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -965,6 +968,11 @@ async function render(){
     }
   }
   $('#loc').textContent=`${d.name} · ${T('section')} ${state.sec}`;
+  /* the tab and any bookmark should say where the reader is. "Open Sunnah" is
+     the literal already used in the <h1>; LANGS has no brand key here. */
+  document.title = state.mode==='hadith'&&state.sel
+    ? `${d.name} ${state.sel} — Open Sunnah`
+    : `${d.name} · ${T('section')} ${state.sec} — Open Sunnah`;
   $('#collSel').value=state.coll;
   buildSecSel(d);
   markSel(); study(); paint();
