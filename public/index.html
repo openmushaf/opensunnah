@@ -292,7 +292,7 @@ const COLL={
 /* UI locales limited to languages the hadith text actually exists in.
    Offering a UI language with no content behind it would be a false promise. */
 const LANGS={
- en:{name:'English',code:'eng',dir:'ltr',rev:true,s:{
+ en:{name:'English',code:'eng',dir:'ltr',rev:true,s:{brand:'Open Sunnah',
    m1:'Section',m1s:'read through a book',m2:'Hadith',m2s:'study · grade · cite',
    lang:'Language',coll:'Collection',section:'Section',goto:'Go to hadith',
    grades:'Gradings',rand:'Random',top:'Top of section',
@@ -307,7 +307,7 @@ const LANGS={
    prev:'Previous hadith',next:'Next hadith',
    sup:'Help keep Islamic knowledge accessible. Free, no ads, no account. %s costs $37 a year to run — the code is open.',
    supCta:'Support development'}},
- ar:{name:'العربية',code:'ara',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{
+ ar:{name:'العربية',code:'ara',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'باب',m1s:'قراءة الكتاب',m2:'حديث',m2s:'دراسة · درجة · اقتباس',
    lang:'اللغة',coll:'المجموعة',section:'الباب',goto:'انتقل إلى حديث',
    grades:'الدرجات',rand:'عشوائي',top:'أول الباب',
@@ -322,7 +322,7 @@ const LANGS={
    prev:'الحديث السابق',next:'الحديث التالي',
    sup:'ساهم في إبقاء المعرفة الإسلامية في متناول الجميع. مجاني، بلا إعلانات، بلا حساب. %s يكلّف ٣٧ دولاراً في السنة — والشيفرة مفتوحة.',
    supCta:'ادعم التطوير'}},
- ur:{name:'اردو',code:'urd',dir:'rtl',rev:false,font:'Noto+Nastaliq+Urdu:wght@400;600',s:{
+ ur:{name:'اردو',code:'urd',dir:'rtl',rev:false,font:'Noto+Nastaliq+Urdu:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'باب',m1s:'کتاب پڑھیں',m2:'حدیث',m2s:'مطالعہ · درجہ · حوالہ',
    lang:'زبان',coll:'مجموعہ',section:'باب',goto:'حدیث پر جائیں',
    grades:'درجات',rand:'بے ترتیب',top:'باب کا آغاز',
@@ -337,7 +337,7 @@ const LANGS={
    prev:'پچھلی حدیث',next:'اگلی حدیث',
    sup:'اسلامی علم کو سب کی رسائی میں رکھنے میں مدد کریں۔ مفت، کوئی اشتہار نہیں، کوئی اکاؤنٹ نہیں۔ %s پر سالانہ ۳۷ ڈالر لاگت آتی ہے — کوڈ کھلا ہے۔',
    supCta:'ترقی میں تعاون کریں'}},
- id:{name:'Bahasa Indonesia',code:'ind',dir:'ltr',rev:false,s:{
+ id:{name:'Bahasa Indonesia',code:'ind',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Bab',m1s:'baca satu kitab',m2:'Hadis',m2s:'telaah · derajat · kutip',
    lang:'Bahasa',coll:'Kitab',section:'Bab',goto:'Buka hadis',
    grades:'Derajat',rand:'Acak',top:'Awal bab',
@@ -352,7 +352,7 @@ const LANGS={
    prev:'Hadis sebelumnya',next:'Hadis berikutnya',
    sup:'Bantu jaga ilmu Islam tetap terjangkau. Gratis, tanpa iklan, tanpa akun. %s menghabiskan $37 per tahun — kodenya terbuka.',
    supCta:'Dukung pengembangan'}},
- bn:{name:'বাংলা',code:'ben',dir:'ltr',rev:false,font:'Noto+Serif+Bengali:wght@400;600&family=Noto+Sans+Bengali:wght@400;600',s:{
+ bn:{name:'বাংলা',code:'ben',dir:'ltr',rev:false,font:'Noto+Serif+Bengali:wght@400;600&family=Noto+Sans+Bengali:wght@400;600',s:{brand:'ওপেন সুন্নাহ',
    m1:'অধ্যায়',m1s:'একটি কিতাব পড়ুন',m2:'হাদিস',m2s:'অধ্যয়ন · মান · উদ্ধৃতি',
    lang:'ভাষা',coll:'সংকলন',section:'অধ্যায়',goto:'হাদিসে যান',
    grades:'মান',rand:'এলোমেলো',top:'অধ্যায়ের শুরু',
@@ -367,7 +367,7 @@ const LANGS={
    prev:'আগের হাদিস',next:'পরের হাদিস',
    sup:'ইসলামি জ্ঞান সবার নাগালে রাখতে সাহায্য করুন। বিনামূল্যে, বিজ্ঞাপন নেই, অ্যাকাউন্ট নেই। %s চালাতে বছরে $37 লাগে — কোড উন্মুক্ত।',
    supCta:'উন্নয়নে সহায়তা করুন'}},
- tr:{name:'Türkçe',code:'tur',dir:'ltr',rev:false,s:{
+ tr:{name:'Türkçe',code:'tur',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Bölüm',m1s:'bir kitabı oku',m2:'Hadis',m2s:'incele · derece · alıntıla',
    lang:'Dil',coll:'Külliyat',section:'Bölüm',goto:'Hadise git',
    grades:'Dereceler',rand:'Rastgele',top:'Bölüm başı',
@@ -382,7 +382,7 @@ const LANGS={
    prev:'Önceki hadis',next:'Sonraki hadis',
    sup:'İslami ilmin herkese açık kalmasına yardım edin. Ücretsiz, reklamsız, hesapsız. %s yılda 37 dolara mal oluyor — kod açık.',
    supCta:'Geliştirmeyi destekle'}},
- fr:{name:'Français',code:'fra',dir:'ltr',rev:false,s:{
+ fr:{name:'Français',code:'fra',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Chapitre',m1s:'lire un livre',m2:'Hadith',m2s:'étudier · degré · citer',
    lang:'Langue',coll:'Recueil',section:'Chapitre',goto:'Aller au hadith',
    grades:'Degrés',rand:'Aléatoire',top:'Début du chapitre',
@@ -397,7 +397,7 @@ const LANGS={
    prev:'Hadith précédent',next:'Hadith suivant',
    sup:'Aidez à garder le savoir islamique accessible. Gratuit, sans publicité, sans compte. %s coûte 37 $ par an — le code est ouvert.',
    supCta:'Soutenir le développement'}},
- ru:{name:'Русский',code:'rus',dir:'ltr',rev:false,s:{
+ ru:{name:'Русский',code:'rus',dir:'ltr',rev:false,s:{brand:'Открытая Сунна',
    m1:'Глава',m1s:'читать книгу',m2:'Хадис',m2s:'разбор · степень · ссылка',
    lang:'Язык',coll:'Сборник',section:'Глава',goto:'Перейти к хадису',
    grades:'Степени достоверности',rand:'Случайный',top:'Начало главы',
@@ -412,7 +412,7 @@ const LANGS={
    prev:'Предыдущий хадис',next:'Следующий хадис',
    sup:'Помогите сохранить исламское знание доступным. Бесплатно, без рекламы, без аккаунта. %s стоит $37 в год — код открыт.',
    supCta:'Поддержать разработку'}},
- ta:{name:'தமிழ்',code:'tam',dir:'ltr',rev:false,font:'Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Tamil:wght@400;600',s:{
+ ta:{name:'தமிழ்',code:'tam',dir:'ltr',rev:false,font:'Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Tamil:wght@400;600',s:{brand:'ஓப்பன் சுன்னா',
    m1:'அத்தியாயம்',m1s:'ஒரு நூலைப் படி',m2:'ஹதீஸ்',m2s:'ஆய்வு · தரம் · மேற்கோள்',
    lang:'மொழி',coll:'தொகுப்பு',section:'அத்தியாயம்',goto:'ஹதீஸுக்குச் செல்',
    grades:'தரங்கள்',rand:'சீரற்ற',top:'அத்தியாயத் தொடக்கம்',
@@ -427,7 +427,7 @@ const LANGS={
    prev:'முந்தைய ஹதீஸ்',next:'அடுத்த ஹதீஸ்',
    sup:'இஸ்லாமிய அறிவு அனைவருக்கும் கிடைக்க உதவுங்கள். இலவசம், விளம்பரம் இல்லை, கணக்கு இல்லை. %s ஆண்டுக்கு $37 செலவாகிறது — நிரல் திறந்தது.',
    supCta:'மேம்பாட்டை ஆதரிக்கவும்'}},
- hi:{name:'हिन्दी',code:'hin',dir:'ltr',rev:false,font:'Noto+Serif+Devanagari:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600',s:{
+ hi:{name:'हिन्दी',code:'hin',dir:'ltr',rev:false,font:'Noto+Serif+Devanagari:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600',s:{brand:'ओपन सुन्नाह',
    m1:'अध्याय',m1s:'एक किताब पढ़ें',m2:'हदीस',m2s:'अध्ययन · दर्जा · संदर्भ',
    lang:'भाषा',coll:'संग्रह',section:'अध्याय',goto:'हदीस पर जाएँ',
    grades:'दर्जे',rand:'यादृच्छिक',top:'अध्याय का आरंभ',
@@ -442,7 +442,7 @@ const LANGS={
    prev:'पिछली हदीस',next:'अगली हदीस',
    sup:'इस्लामी ज्ञान को सबकी पहुँच में रखने में मदद करें। मुफ़्त, कोई विज्ञापन नहीं, कोई खाता नहीं। %s को चलाने में सालाना $37 लगते हैं — कोड खुला है।',
    supCta:'विकास में सहयोग करें'}},
- fa:{name:'فارسی',code:'fas',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{
+ fa:{name:'فارسی',code:'fas',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'باب',m1s:'خواندن یک کتاب',m2:'حدیث',m2s:'مطالعه · درجه · ارجاع',
    lang:'زبان',coll:'مجموعه',section:'باب',goto:'رفتن به حدیث',
    grades:'درجات',rand:'تصادفی',top:'آغاز باب',
@@ -457,7 +457,7 @@ const LANGS={
    prev:'حدیث پیشین',next:'حدیث بعدی',
    sup:'کمک کنید دانش اسلامی در دسترس همه بماند. رایگان، بدون تبلیغات، بدون حساب. %s سالانه ۳۷ دلار هزینه دارد — کد باز است.',
    supCta:'از توسعه حمایت کنید'}},
- ps:{name:'پښتو',code:'pus',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{
+ ps:{name:'پښتو',code:'pus',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'باب',m1s:'یو کتاب ولولئ',m2:'حدیث',m2s:'زده‌کړه · درجه · حواله',
    lang:'ژبه',coll:'ټولګه',section:'باب',goto:'حدیث ته ولاړ شه',
    grades:'درجې',rand:'تصادفي',top:'د باب پیل',
@@ -472,7 +472,7 @@ const LANGS={
    prev:'مخکینی حدیث',next:'راتلونکی حدیث',
    sup:'مرسته وکړئ چې اسلامي پوهه د ټولو لپاره لاسرسي وړ پاتې شي. وړیا، بې اعلانه، بې حسابه. %s په کال کې ۳۷ ډالره لګښت لري — کوډ خلاص دی.',
    supCta:'د پرمختګ ملاتړ وکړئ'}},
- ckb:{name:'کوردیی ناوەندی',code:'kur',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{
+ ckb:{name:'کوردیی ناوەندی',code:'kur',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'بەش',m1s:'کتێبێک بخوێنەوە',m2:'حەدیس',m2s:'لێکۆڵینەوە · پلە · سەرچاوە',
    lang:'زمان',coll:'کۆکراوە',section:'بەش',goto:'بڕۆ بۆ حەدیس',
    grades:'پلەکان',rand:'هەڕەمەکی',top:'سەرەتای بەش',
@@ -487,7 +487,7 @@ const LANGS={
    prev:'حەدیسی پێشوو',next:'حەدیسی داهاتوو',
    sup:'یارمەتی بدە زانستی ئیسلامی بۆ هەمووان بەردەست بمێنێت. بێبەرامبەر، بێ ڕیکلام، بێ هەژمار. %s ساڵانە ٣٧ دۆلار تێچووی هەیە — کۆدەکە کراوەیە.',
    supCta:'پشتیوانی لە گەشەپێدان بکە'}},
- ha:{name:'Hausa',code:'hau',dir:'ltr',rev:false,s:{
+ ha:{name:'Hausa',code:'hau',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Babi',m1s:'karanta wani littafi',m2:'Hadisi',m2s:'nazari · daraja · nassi',
    lang:'Harshe',coll:'Tarin hadisai',section:'Babi',goto:'Je zuwa hadisi',
    grades:'Darajoji',rand:'Bazuwa',top:'Farkon babi',
@@ -502,7 +502,7 @@ const LANGS={
    prev:'Hadisin da ya gabata',next:'Hadisi na gaba',
    sup:'Taimaka a ci gaba da samun ilimin Musulunci ga kowa. Kyauta, babu talla, babu asusu. %s yana kashe $37 a shekara — lambar a buɗe take.',
    supCta:'Tallafa wa ci gaba'}},
- sw:{name:'Kiswahili',code:'swh',dir:'ltr',rev:false,s:{
+ sw:{name:'Kiswahili',code:'swh',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Mlango',m1s:'soma kitabu kimoja',m2:'Hadithi',m2s:'chunguza · daraja · rejea',
    lang:'Lugha',coll:'Mkusanyiko',section:'Mlango',goto:'Nenda kwenye hadithi',
    grades:'Madaraja',rand:'Bila mpangilio',top:'Mwanzo wa mlango',
@@ -517,7 +517,7 @@ const LANGS={
    prev:'Hadithi iliyotangulia',next:'Hadithi ifuatayo',
    sup:'Saidia elimu ya Kiislamu ibaki inapatikana kwa wote. Bure, hakuna matangazo, hakuna akaunti. %s hugharimu $37 kwa mwaka — msimbo ni wazi.',
    supCta:'Saidia maendeleo'}},
- so:{name:'Soomaali',code:'som',dir:'ltr',rev:false,s:{
+ so:{name:'Soomaali',code:'som',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Cutub',m1s:'akhri hal kitaab',m2:'Xadiis',m2s:'daraasad · darajo · tixraac',
    lang:'Luqad',coll:'Uruurin',section:'Cutub',goto:'U gudub xadiis',
    grades:'Darajooyin',rand:'Mid kasta',top:'Bilowga cutubka',
@@ -532,7 +532,7 @@ const LANGS={
    prev:'Xadiiskii hore',next:'Xadiiska xiga',
    sup:'Kaalmee in cilmiga Islaamka uu qof walba heli karo. Bilaash, xayaysiin ma leh, koonto ma leh. %s waxay ku kacaysaa $37 sanadkii — koodhku waa furan yahay.',
    supCta:'Taageer horumarinta'}},
- uz:{name:'Oʻzbekcha',code:'uzb',dir:'ltr',rev:false,s:{
+ uz:{name:'Oʻzbekcha',code:'uzb',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Bob',m1s:'bitta kitobni oʻqing',m2:'Hadis',m2s:'oʻrganish · daraja · manba',
    lang:'Til',coll:'Toʻplam',section:'Bob',goto:'Hadisga oʻtish',
    grades:'Darajalar',rand:'Tasodifiy',top:'Bob boshi',
@@ -547,7 +547,7 @@ const LANGS={
    prev:'Oldingi hadis',next:'Keyingi hadis',
    sup:'Islom ilmi hamma uchun ochiq qolishiga yordam bering. Bepul, reklamasiz, hisobsiz. %s yiliga $37 turadi — kod ochiq.',
    supCta:'Rivojlanishni qoʻllab-quvvatlash'}},
- az:{name:'Azərbaycanca',code:'aze',dir:'ltr',rev:false,s:{
+ az:{name:'Azərbaycanca',code:'aze',dir:'ltr',rev:false,s:{brand:'Open Sünnə',
    m1:'Bölmə',m1s:'bir kitab oxuyun',m2:'Hədis',m2s:'araşdır · dərəcə · istinad',
    lang:'Dil',coll:'Toplu',section:'Bölmə',goto:'Hədisə keç',
    grades:'Dərəcələr',rand:'Təsadüfi',top:'Bölmənin əvvəli',
@@ -562,7 +562,7 @@ const LANGS={
    prev:'Əvvəlki hədis',next:'Sonrakı hədis',
    sup:'İslam elminin hamı üçün əlçatan qalmasına kömək edin. Pulsuz, reklamsız, hesabsız. %s ildə $37-a başa gəlir — kod açıqdır.',
    supCta:'İnkişafı dəstəklə'}},
- ml:{name:'മലയാളം',code:'mal',dir:'ltr',rev:false,font:'Noto+Serif+Malayalam:wght@400;600&family=Noto+Sans+Malayalam:wght@400;600',s:{
+ ml:{name:'മലയാളം',code:'mal',dir:'ltr',rev:false,font:'Noto+Serif+Malayalam:wght@400;600&family=Noto+Sans+Malayalam:wght@400;600',s:{brand:'ഓപ്പൺ സുന്നാഹ്',
    m1:'അധ്യായം',m1s:'ഒരു ഗ്രന്ഥം വായിക്കുക',m2:'ഹദീസ്',m2s:'പഠനം · ഗ്രേഡ് · ഉദ്ധരണി',
    lang:'ഭാഷ',coll:'സമാഹാരം',section:'അധ്യായം',goto:'ഹദീസിലേക്ക് പോകുക',
    grades:'ഗ്രേഡുകൾ',rand:'ക്രമരഹിതം',top:'അധ്യായത്തിന്റെ തുടക്കം',
@@ -577,7 +577,7 @@ const LANGS={
    prev:'മുൻ ഹദീസ്',next:'അടുത്ത ഹദീസ്',
    sup:'ഇസ്ലാമിക വിജ്ഞാനം എല്ലാവർക്കും ലഭ്യമായിരിക്കാൻ സഹായിക്കുക. സൗജന്യം, പരസ്യമില്ല, അക്കൗണ്ടില്ല. %s പ്രവർത്തിപ്പിക്കാൻ വർഷം $37 ചെലവാകും — കോഡ് തുറന്നതാണ്.',
    supCta:'വികസനത്തെ പിന്തുണയ്ക്കുക'}},
- om:{name:'Afaan Oromoo',code:'orm',dir:'ltr',rev:false,s:{
+ om:{name:'Afaan Oromoo',code:'orm',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Boqonnaa',m1s:'kitaaba tokko dubbisi',m2:'Hadiisa',m2s:'qorannoo · sadarkaa · wabii',
    lang:'Afaan',coll:'Walitti qabaa',section:'Boqonnaa',goto:'Gara hadiisaa deemi',
    grades:'Sadarkaalee',rand:'Carraan',top:'Jalqaba boqonnaa',
@@ -592,7 +592,7 @@ const LANGS={
    prev:'Hadiisa darbe',next:'Hadiisa itti aanu',
    sup:'Beekumsi Islaamaa namoota hundaaf akka argamu gargaari. Bilisa, beeksisa hin qabu, herrega hin qabu. %s waggaatti $37 baasii qaba — koodichi banaa dha.',
    supCta:'Guddina deeggari'}},
- am:{name:'አማርኛ',code:'amh',dir:'ltr',rev:false,font:'Noto+Serif+Ethiopic:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;600',s:{
+ am:{name:'አማርኛ',code:'amh',dir:'ltr',rev:false,font:'Noto+Serif+Ethiopic:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;600',s:{brand:'ኦፐን ሱና',
    m1:'ምዕራፍ',m1s:'አንድ መጽሐፍ አንብብ',m2:'ሐዲስ',m2s:'ጥናት · ደረጃ · ማጣቀሻ',
    lang:'ቋንቋ',coll:'ስብስብ',section:'ምዕራፍ',goto:'ወደ ሐዲስ ሂድ',
    grades:'ደረጃዎች',rand:'በዘፈቀደ',top:'የምዕራፉ መጀመሪያ',
@@ -607,7 +607,7 @@ const LANGS={
    prev:'ቀዳሚው ሐዲስ',next:'ቀጣዩ ሐዲስ',
    sup:'እስላማዊ እውቀት ለሁሉም ተደራሽ ሆኖ እንዲቆይ እርዱ። ነጻ፣ ማስታወቂያ የለም፣ መለያ የለም። %s በዓመት $37 ያስወጣል — ኮዱ ክፍት ነው።',
    supCta:'ልማትን ደግፍ'}},
- es:{name:'Español',code:'spa',dir:'ltr',rev:false,s:{
+ es:{name:'Español',code:'spa',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Capítulo',m1s:'leer un libro',m2:'Hadiz',m2s:'estudiar · grado · citar',
    lang:'Idioma',coll:'Colección',section:'Capítulo',goto:'Ir al hadiz',
    grades:'Grados',rand:'Aleatorio',top:'Inicio del capítulo',
@@ -622,7 +622,7 @@ const LANGS={
    prev:'Hadiz anterior',next:'Hadiz siguiente',
    sup:'Ayude a mantener accesible el conocimiento islámico. Gratis, sin anuncios, sin cuenta. %s cuesta 37 $ al año — el código es abierto.',
    supCta:'Apoyar el desarrollo'}},
- de:{name:'Deutsch',code:'deu',dir:'ltr',rev:false,s:{
+ de:{name:'Deutsch',code:'deu',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Kapitel',m1s:'ein Buch lesen',m2:'Hadith',m2s:'studieren · Grad · zitieren',
    lang:'Sprache',coll:'Sammlung',section:'Kapitel',goto:'Zum Hadith',
    grades:'Grade',rand:'Zufällig',top:'Kapitelanfang',
@@ -637,7 +637,7 @@ const LANGS={
    prev:'Vorheriger Hadith',next:'Nächster Hadith',
    sup:'Helfen Sie mit, islamisches Wissen zugänglich zu halten. Kostenlos, ohne Werbung, ohne Konto. %s kostet 37 $ im Jahr — der Code ist offen.',
    supCta:'Entwicklung unterstützen'}},
- ms:{name:'Bahasa Melayu',code:'may',dir:'ltr',rev:false,s:{
+ ms:{name:'Bahasa Melayu',code:'may',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Bab',m1s:'baca satu kitab',m2:'Hadis',m2s:'kaji · darjat · rujuk',
    lang:'Bahasa',coll:'Himpunan',section:'Bab',goto:'Pergi ke hadis',
    grades:'Darjat',rand:'Rawak',top:'Awal bab',
@@ -652,7 +652,7 @@ const LANGS={
    prev:'Hadis sebelumnya',next:'Hadis seterusnya',
    sup:'Bantu pastikan ilmu Islam kekal boleh dicapai. Percuma, tiada iklan, tiada akaun. %s memerlukan $37 setahun — kodnya terbuka.',
    supCta:'Sokong pembangunan'}},
- sq:{name:'Shqip',code:'alb',dir:'ltr',rev:false,s:{
+ sq:{name:'Shqip',code:'alb',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Kapitull',m1s:'lexo një libër',m2:'Hadith',m2s:'studio · gradë · cito',
    lang:'Gjuha',coll:'Përmbledhje',section:'Kapitull',goto:'Shko te hadithi',
    grades:'Gradat',rand:'Rastësor',top:'Fillimi i kapitullit',
@@ -667,7 +667,7 @@ const LANGS={
    prev:'Hadithi i mëparshëm',next:'Hadithi tjetër',
    sup:'Ndihmoni që dija islame të mbetet e arritshme për të gjithë. Falas, pa reklama, pa llogari. %s kushton 37 $ në vit — kodi është i hapur.',
    supCta:'Mbështet zhvillimin'}},
- bs:{name:'Bosanski',code:'bos',dir:'ltr',rev:false,s:{
+ bs:{name:'Bosanski',code:'bos',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Poglavlje',m1s:'pročitaj jednu knjigu',m2:'Hadis',m2s:'proučavanje · stepen · citat',
    lang:'Jezik',coll:'Zbirka',section:'Poglavlje',goto:'Idi na hadis',
    grades:'Stepeni',rand:'Nasumično',top:'Početak poglavlja',
@@ -968,11 +968,10 @@ async function render(){
     }
   }
   $('#loc').textContent=`${d.name} · ${T('section')} ${state.sec}`;
-  /* the tab and any bookmark should say where the reader is. "Open Sunnah" is
-     the literal already used in the <h1>; LANGS has no brand key here. */
+  /* the tab and any bookmark should say where the reader is, in their language */
   document.title = state.mode==='hadith'&&state.sel
-    ? `${d.name} ${state.sel} — Open Sunnah`
-    : `${d.name} · ${T('section')} ${state.sec} — Open Sunnah`;
+    ? `${d.name} ${state.sel} — ${T('brand')}`
+    : `${d.name} · ${T('section')} ${state.sec} — ${T('brand')}`;
   $('#collSel').value=state.coll;
   buildSecSel(d);
   markSel(); study(); paint();
@@ -1035,6 +1034,9 @@ function applyLang(){
   if(l.font){if(!fontLink){fontLink=document.createElement('link');fontLink.rel='stylesheet';document.head.appendChild(fontLink);}
     fontLink.href=`https://fonts.googleapis.com/css2?family=${l.font}&display=swap`;}
   $('#draftNote').textContent=l.rev?'':T('draft');
+  /* the markup keeps "Open Sunnah" as a static fallback so a crawler and a
+     no-JS reader still see a name; this localises it once the app runs */
+  $('#brand').textContent=T('brand');
   $('#l_lang').textContent=T('lang');$('#l_coll').textContent=T('coll');
   $('#l_goto').textContent=T('goto');$('#l_grades').textContent=T('grades');
   /* the visible eyebrows are separate elements, so the controls themselves have
