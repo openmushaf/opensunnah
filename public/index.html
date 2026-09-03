@@ -310,8 +310,12 @@ const COLL={
   qudsi:{en:'Forty Hadith Qudsi',ar:'الأربعون القدسية',langs:['ara','eng','fra']},
   dehlawi:{en:'Forty Hadith of Shah Waliullah',ar:'أربعون ولي الله الدهلوي',langs:['ara','eng','fra']},
 };
-/* UI locales limited to languages the hadith text actually exists in.
-   Offering a UI language with no content behind it would be a false promise. */
+/* THE INTERFACE IS 26 LANGUAGES; THE HADITH TEXT EXISTS IN NINE. Those are different
+   numbers and the difference is load-bearing — COLL[].langs lists the nine, and a
+   locale outside them reads the hadith in English with T('noText') saying so.
+   This comment used to claim UI locales were limited to the languages the text exists
+   in. That was true when there were nine locales and stopped being true at 26; the
+   footer carried the same conflation and has been corrected in T('note'). */
 const LANGS={
  en:{name:'English',code:'eng',dir:'ltr',rev:true,s:{brand:'Open Sunnah',
    m1:'Section',m1s:'read through a book',m2:'Hadith',m2s:'study · grade · cite',
@@ -327,7 +331,9 @@ const LANGS={
    noText:'Hadith are not available in this language — showing English.',
    prev:'Previous hadith',next:'Next hadith',
    sup:'Help keep Islamic knowledge accessible. Free, no ads, no account. %s costs $37 a year to run — the code is open.',
-   supCta:'Support development'}},
+   supCta:'Support development',
+   note:'Every grading is shown with the scholar who gave it. A hadith is not simply “authentic” — Al-Albani, Zubair Ali Zai and others often differ, and this site never collapses that into one verdict. Grade colours are a display aid; the exact wording and the scholar’s name are always shown verbatim. Text, translations and gradings come from %s via jsDelivr. The interface is available in 26 languages; the hadith text itself exists in nine. Nothing here is machine-translated — every translation is a published work.',
+   noteLoad:'A collection loads once, then reading is instant and offline. Bukhārī and Muslim are large; the shorter collections are quick.'}},
  ar:{name:'العربية',code:'ara',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'باب',m1s:'قراءة الكتاب',m2:'حديث',m2s:'دراسة · درجة · اقتباس',
    lang:'اللغة',coll:'المجموعة',section:'الباب',goto:'انتقل إلى حديث',
@@ -342,7 +348,9 @@ const LANGS={
    noText:'الأحاديث غير متوفرة بهذه اللغة — يُعرض النص بالإنجليزية.',
    prev:'الحديث السابق',next:'الحديث التالي',
    sup:'ساهم في إبقاء المعرفة الإسلامية في متناول الجميع. مجاني، بلا إعلانات، بلا حساب. %s يكلّف ٣٧ دولاراً في السنة — والشيفرة مفتوحة.',
-   supCta:'ادعم التطوير'}},
+   supCta:'ادعم التطوير',
+   note:'كل حكم على الحديث يُعرض مقروناً باسم العالم الذي أصدره. فالحديث ليس ببساطة «صحيحاً» — إذ يختلف الألباني وزبير علي زئي وغيرهما كثيراً، وهذا الموقع لا يختزل ذلك في حكم واحد أبداً. ألوان الدرجات وسيلة عرض فحسب؛ أما نص الحكم واسم العالم فيُذكران دائماً كما وردا. النصوص والترجمات والأحكام من %s عبر jsDelivr. الواجهة متاحة بست وعشرين لغة، أما نص الحديث نفسه فيوجد بتسع. لا شيء هنا مترجم آلياً — كل ترجمة عمل منشور.',
+   noteLoad:'تُحمَّل المجموعة مرة واحدة، ثم تصير القراءة فورية ودون اتصال. البخاري ومسلم كبيران؛ والمجموعات الأقصر سريعة.'}},
  ur:{name:'اردو',code:'urd',dir:'rtl',rev:false,font:'Noto+Nastaliq+Urdu:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'باب',m1s:'کتاب پڑھیں',m2:'حدیث',m2s:'مطالعہ · درجہ · حوالہ',
    lang:'زبان',coll:'مجموعہ',section:'باب',goto:'حدیث پر جائیں',
@@ -357,7 +365,9 @@ const LANGS={
    noText:'احادیث اس زبان میں دستیاب نہیں — انگریزی دکھائی جا رہی ہے۔',
    prev:'پچھلی حدیث',next:'اگلی حدیث',
    sup:'اسلامی علم کو سب کی رسائی میں رکھنے میں مدد کریں۔ مفت، کوئی اشتہار نہیں، کوئی اکاؤنٹ نہیں۔ %s پر سالانہ ۳۷ ڈالر لاگت آتی ہے — کوڈ کھلا ہے۔',
-   supCta:'ترقی میں تعاون کریں'}},
+   supCta:'ترقی میں تعاون کریں',
+   note:'ہر درجہ بندی اُس عالم کے نام کے ساتھ دکھائی جاتی ہے جس نے وہ حکم دیا۔ کوئی حدیث محض ”صحیح“ نہیں ہوتی — البانی، زبیر علی زئی اور دیگر اکثر اختلاف کرتے ہیں، اور یہ سائٹ اسے کبھی ایک فیصلے میں نہیں سمیٹتی۔ درجات کے رنگ صرف دکھانے کا ذریعہ ہیں؛ اصل الفاظ اور عالم کا نام ہمیشہ من و عن دیے جاتے ہیں۔ متن، تراجم اور درجہ بندیاں %s سے jsDelivr کے ذریعے آتی ہیں۔ انٹرفیس چھبیس زبانوں میں دستیاب ہے، جبکہ حدیث کا متن خود نو زبانوں میں موجود ہے۔ یہاں کچھ بھی مشینی ترجمہ نہیں — ہر ترجمہ ایک شائع شدہ کام ہے۔',
+   noteLoad:'مجموعہ ایک بار لوڈ ہوتا ہے، پھر مطالعہ فوری اور آف لائن ہوتا ہے۔ بخاری اور مسلم بڑے ہیں؛ چھوٹے مجموعے جلد کھلتے ہیں۔'}},
  id:{name:'Bahasa Indonesia',code:'ind',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Bab',m1s:'baca satu kitab',m2:'Hadis',m2s:'telaah · derajat · kutip',
    lang:'Bahasa',coll:'Kitab',section:'Bab',goto:'Buka hadis',
@@ -372,7 +382,9 @@ const LANGS={
    noText:'Hadis tidak tersedia dalam bahasa ini — menampilkan bahasa Inggris.',
    prev:'Hadis sebelumnya',next:'Hadis berikutnya',
    sup:'Bantu jaga ilmu Islam tetap terjangkau. Gratis, tanpa iklan, tanpa akun. %s menghabiskan $37 per tahun — kodenya terbuka.',
-   supCta:'Dukung pengembangan'}},
+   supCta:'Dukung pengembangan',
+   note:'Setiap penilaian ditampilkan bersama nama ulama yang memberikannya. Sebuah hadis tidak begitu saja “sahih” — Al-Albani, Zubair Ali Zai dan yang lain kerap berbeda, dan situs ini tidak pernah meringkasnya menjadi satu putusan. Warna derajat hanya alat bantu tampilan; redaksi persisnya dan nama ulamanya selalu ditampilkan apa adanya. Teks, terjemahan dan penilaian berasal dari %s melalui jsDelivr. Antarmuka tersedia dalam 26 bahasa, sedangkan teks hadis sendiri ada dalam sembilan. Tidak ada yang diterjemahkan mesin di sini — setiap terjemahan adalah karya terbitan.',
+   noteLoad:'Sebuah koleksi dimuat sekali, lalu membaca menjadi seketika dan luring. Bukhārī dan Muslim besar; koleksi yang lebih pendek cepat.'}},
  bn:{name:'বাংলা',code:'ben',dir:'ltr',rev:false,font:'Noto+Serif+Bengali:wght@400;600&family=Noto+Sans+Bengali:wght@400;600',s:{brand:'ওপেন সুন্নাহ',
    m1:'অধ্যায়',m1s:'একটি কিতাব পড়ুন',m2:'হাদিস',m2s:'অধ্যয়ন · মান · উদ্ধৃতি',
    lang:'ভাষা',coll:'সংকলন',section:'অধ্যায়',goto:'হাদিসে যান',
@@ -387,7 +399,9 @@ const LANGS={
    noText:'এই ভাষায় হাদিস পাওয়া যায় না — ইংরেজি দেখানো হচ্ছে।',
    prev:'আগের হাদিস',next:'পরের হাদিস',
    sup:'ইসলামি জ্ঞান সবার নাগালে রাখতে সাহায্য করুন। বিনামূল্যে, বিজ্ঞাপন নেই, অ্যাকাউন্ট নেই। %s চালাতে বছরে $37 লাগে — কোড উন্মুক্ত।',
-   supCta:'উন্নয়নে সহায়তা করুন'}},
+   supCta:'উন্নয়নে সহায়তা করুন',
+   note:'প্রতিটি মান সেই আলিমের নামসহ দেখানো হয় যিনি তা দিয়েছেন। কোনো হাদিস কেবলই “সহিহ” নয় — Al-Albani, Zubair Ali Zai ও অন্যরা প্রায়ই ভিন্নমত পোষণ করেন, এবং এই সাইট তা কখনও একটিমাত্র রায়ে গুটিয়ে আনে না। মানের রঙ কেবল উপস্থাপনার সহায়ক; প্রকৃত শব্দ ও আলিমের নাম সর্বদা হুবহু দেখানো হয়। পাঠ, অনুবাদ ও মান %s থেকে jsDelivr-এর মাধ্যমে আসে। ইন্টারফেস ২৬টি ভাষায় পাওয়া যায়, আর হাদিসের মূল পাঠ রয়েছে নয়টি ভাষায়। এখানে কিছুই যন্ত্র-অনূদিত নয় — প্রতিটি অনুবাদ একটি প্রকাশিত রচনা।',
+   noteLoad:'একটি সংকলন একবার লোড হয়, তারপর পড়া তাৎক্ষণিক ও অফলাইন। Bukhārī ও Muslim বড়; ছোট সংকলনগুলি দ্রুত খোলে।'}},
  tr:{name:'Türkçe',code:'tur',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Bölüm',m1s:'bir kitabı oku',m2:'Hadis',m2s:'incele · derece · alıntıla',
    lang:'Dil',coll:'Külliyat',section:'Bölüm',goto:'Hadise git',
@@ -402,7 +416,9 @@ const LANGS={
    noText:'Hadisler bu dilde mevcut değil — İngilizce gösteriliyor.',
    prev:'Önceki hadis',next:'Sonraki hadis',
    sup:'İslami ilmin herkese açık kalmasına yardım edin. Ücretsiz, reklamsız, hesapsız. %s yılda 37 dolara mal oluyor — kod açık.',
-   supCta:'Geliştirmeyi destekle'}},
+   supCta:'Geliştirmeyi destekle',
+   note:'Her derece, o hükmü veren âlimin adıyla birlikte gösterilir. Bir hadis yalnızca “sahih” değildir — Al-Albani, Zubair Ali Zai ve diğerleri çoğu zaman ayrılır ve bu site bunu asla tek bir hükme indirgemez. Derece renkleri yalnızca bir gösterim yardımıdır; ifadenin kendisi ve âlimin adı her zaman olduğu gibi verilir. Metin, çeviriler ve dereceler %s kaynağından jsDelivr üzerinden gelir. Arayüz 26 dilde sunulur; hadis metninin kendisi ise dokuz dilde vardır. Burada hiçbir şey makine çevirisi değildir — her çeviri yayımlanmış bir eserdir.',
+   noteLoad:'Bir külliyat bir kez yüklenir, sonra okuma anında ve çevrimdışı olur. Bukhārī ve Muslim büyüktür; kısa külliyatlar hızlıdır.'}},
  fr:{name:'Français',code:'fra',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Chapitre',m1s:'lire un livre',m2:'Hadith',m2s:'étudier · degré · citer',
    lang:'Langue',coll:'Recueil',section:'Chapitre',goto:'Aller au hadith',
@@ -417,7 +433,9 @@ const LANGS={
    noText:'Les hadiths ne sont pas disponibles dans cette langue — affichage en anglais.',
    prev:'Hadith précédent',next:'Hadith suivant',
    sup:'Aidez à garder le savoir islamique accessible. Gratuit, sans publicité, sans compte. %s coûte 37 $ par an — le code est ouvert.',
-   supCta:'Soutenir le développement'}},
+   supCta:'Soutenir le développement',
+   note:'Chaque appréciation est affichée avec le nom du savant qui l’a portée. Un hadith n’est pas simplement « authentique » — Al-Albani, Zubair Ali Zai et d’autres divergent souvent, et ce site ne réduit jamais cela à un verdict unique. Les couleurs des degrés sont une aide visuelle ; la formulation exacte et le nom du savant sont toujours donnés tels quels. Le texte, les traductions et les appréciations proviennent de %s via jsDelivr. L’interface est disponible en 26 langues ; le texte des hadiths, lui, existe en neuf. Rien ici n’est traduit automatiquement — chaque traduction est une œuvre publiée.',
+   noteLoad:'Un recueil se charge une fois, puis la lecture est instantanée et hors ligne. Bukhārī et Muslim sont volumineux ; les recueils plus courts sont rapides.'}},
  ru:{name:'Русский',code:'rus',dir:'ltr',rev:false,s:{brand:'Открытая Сунна',
    m1:'Глава',m1s:'читать книгу',m2:'Хадис',m2s:'разбор · степень · ссылка',
    lang:'Язык',coll:'Сборник',section:'Глава',goto:'Перейти к хадису',
@@ -432,7 +450,9 @@ const LANGS={
    noText:'Хадисы недоступны на этом языке — показан английский.',
    prev:'Предыдущий хадис',next:'Следующий хадис',
    sup:'Помогите сохранить исламское знание доступным. Бесплатно, без рекламы, без аккаунта. %s стоит $37 в год — код открыт.',
-   supCta:'Поддержать разработку'}},
+   supCta:'Поддержать разработку',
+   note:'Каждая оценка приводится с именем учёного, который её вынес. Хадис не бывает просто «достоверным» — Al-Albani, Zubair Ali Zai и другие часто расходятся, и этот сайт никогда не сводит это к одному вердикту. Цвета степеней — лишь вспомогательное отображение; точная формулировка и имя учёного всегда приводятся дословно. Текст, переводы и оценки поступают из %s через jsDelivr. Интерфейс доступен на 26 языках, тогда как сам текст хадисов существует на девяти. Здесь нет машинного перевода — каждый перевод является опубликованной работой.',
+   noteLoad:'Сборник загружается один раз, затем чтение мгновенно и офлайн. Bukhārī и Muslim большие; короткие сборники загружаются быстро.'}},
  ta:{name:'தமிழ்',code:'tam',dir:'ltr',rev:false,font:'Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Tamil:wght@400;600',s:{brand:'ஓப்பன் சுன்னா',
    m1:'அத்தியாயம்',m1s:'ஒரு நூலைப் படி',m2:'ஹதீஸ்',m2s:'ஆய்வு · தரம் · மேற்கோள்',
    lang:'மொழி',coll:'தொகுப்பு',section:'அத்தியாயம்',goto:'ஹதீஸுக்குச் செல்',
@@ -447,7 +467,9 @@ const LANGS={
    noText:'இந்த மொழியில் ஹதீஸ் கிடைக்கவில்லை — ஆங்கிலம் காட்டப்படுகிறது.',
    prev:'முந்தைய ஹதீஸ்',next:'அடுத்த ஹதீஸ்',
    sup:'இஸ்லாமிய அறிவு அனைவருக்கும் கிடைக்க உதவுங்கள். இலவசம், விளம்பரம் இல்லை, கணக்கு இல்லை. %s ஆண்டுக்கு $37 செலவாகிறது — நிரல் திறந்தது.',
-   supCta:'மேம்பாட்டை ஆதரிக்கவும்'}},
+   supCta:'மேம்பாட்டை ஆதரிக்கவும்',
+   note:'ஒவ்வொரு தரப்படுத்தலும் அதை அளித்த அறிஞரின் பெயருடன் காட்டப்படுகிறது. ஒரு ஹதீஸ் வெறுமனே “ஆதாரப்பூர்வமானது” அல்ல — Al-Albani, Zubair Ali Zai மற்றும் பிறர் அடிக்கடி வேறுபடுகிறார்கள், இந்தத் தளம் அதை ஒரே தீர்ப்பாகச் சுருக்குவதில்லை. தர நிறங்கள் காட்சி உதவி மட்டுமே; சரியான சொற்களும் அறிஞரின் பெயரும் எப்போதும் அப்படியே காட்டப்படும். உரை, மொழிபெயர்ப்புகள், தரப்படுத்தல்கள் %s இலிருந்து jsDelivr வழியாக வருகின்றன. இடைமுகம் 26 மொழிகளில் உள்ளது; ஹதீஸ் உரை ஒன்பது மொழிகளில் மட்டுமே உள்ளது. இங்கு எதுவும் இயந்திர மொழிபெயர்ப்பு அல்ல — ஒவ்வொரு மொழிபெயர்ப்பும் வெளியிடப்பட்ட படைப்பு.',
+   noteLoad:'ஒரு தொகுப்பு ஒருமுறை ஏற்றப்படும், பின்னர் வாசிப்பு உடனடி மற்றும் ஆஃப்லைன். Bukhārī மற்றும் Muslim பெரியவை; சிறிய தொகுப்புகள் விரைவானவை.'}},
  hi:{name:'हिन्दी',code:'hin',dir:'ltr',rev:false,font:'Noto+Serif+Devanagari:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600',s:{brand:'ओपन सुन्नाह',
    m1:'अध्याय',m1s:'एक किताब पढ़ें',m2:'हदीस',m2s:'अध्ययन · दर्जा · संदर्भ',
    lang:'भाषा',coll:'संग्रह',section:'अध्याय',goto:'हदीस पर जाएँ',
@@ -462,7 +484,9 @@ const LANGS={
    noText:'इस भाषा में हदीस उपलब्ध नहीं — अंग्रेज़ी दिखाई जा रही है।',
    prev:'पिछली हदीस',next:'अगली हदीस',
    sup:'इस्लामी ज्ञान को सबकी पहुँच में रखने में मदद करें। मुफ़्त, कोई विज्ञापन नहीं, कोई खाता नहीं। %s को चलाने में सालाना $37 लगते हैं — कोड खुला है।',
-   supCta:'विकास में सहयोग करें'}},
+   supCta:'विकास में सहयोग करें',
+   note:'प्रत्येक श्रेणी उस विद्वान के नाम के साथ दिखाई जाती है जिसने वह निर्णय दिया। कोई हदीस केवल “प्रामाणिक” नहीं होती — Al-Albani, Zubair Ali Zai और अन्य अक्सर मतभेद रखते हैं, और यह साइट उसे कभी एक ही फ़ैसले में नहीं समेटती। श्रेणियों के रंग केवल प्रदर्शन सहायक हैं; मूल शब्द और विद्वान का नाम सदैव ज्यों का त्यों दिया जाता है। पाठ, अनुवाद और श्रेणियाँ %s से jsDelivr के माध्यम से आती हैं। इंटरफ़ेस 26 भाषाओं में उपलब्ध है, जबकि हदीस का मूल पाठ नौ भाषाओं में है। यहाँ कुछ भी मशीनी अनुवाद नहीं — प्रत्येक अनुवाद एक प्रकाशित कृति है।',
+   noteLoad:'संग्रह एक बार लोड होता है, फिर पढ़ना तत्काल और ऑफ़लाइन होता है। Bukhārī और Muslim बड़े हैं; छोटे संग्रह शीघ्र खुलते हैं।'}},
  fa:{name:'فارسی',code:'fas',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'باب',m1s:'خواندن یک کتاب',m2:'حدیث',m2s:'مطالعه · درجه · ارجاع',
    lang:'زبان',coll:'مجموعه',section:'باب',goto:'رفتن به حدیث',
@@ -477,7 +501,9 @@ const LANGS={
    noText:'حدیث به این زبان موجود نیست — انگلیسی نمایش داده می‌شود.',
    prev:'حدیث پیشین',next:'حدیث بعدی',
    sup:'کمک کنید دانش اسلامی در دسترس همه بماند. رایگان، بدون تبلیغات، بدون حساب. %s سالانه ۳۷ دلار هزینه دارد — کد باز است.',
-   supCta:'از توسعه حمایت کنید'}},
+   supCta:'از توسعه حمایت کنید',
+   note:'هر داوری همراه با نام عالمی که آن را داده است نمایش داده می‌شود. یک حدیث به‌سادگی «صحیح» نیست — الألباني و زبير علي زئي و دیگران بارها اختلاف دارند، و این پایگاه هرگز آن را در یک حکم واحد فرو نمی‌کاهد. رنگ درجه‌ها تنها کمکِ نمایش‌اند؛ عبارت دقیق و نام عالم همیشه عیناً آورده می‌شود. متن، ترجمه‌ها و داوری‌ها از %s از طریق jsDelivr می‌آیند. رابط کاربری به بیست‌وشش زبان در دسترس است، اما خودِ متن حدیث به نه زبان وجود دارد. هیچ‌چیز اینجا ترجمهٔ ماشینی نیست — هر ترجمه اثری منتشرشده است.',
+   noteLoad:'مجموعه یک بار بارگذاری می‌شود، سپس خواندن فوری و آفلاین است. البخاري و مسلم بزرگ‌اند؛ مجموعه‌های کوتاه‌تر سریع‌اند.'}},
  ps:{name:'پښتو',code:'pus',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'باب',m1s:'یو کتاب ولولئ',m2:'حدیث',m2s:'زده‌کړه · درجه · حواله',
    lang:'ژبه',coll:'ټولګه',section:'باب',goto:'حدیث ته ولاړ شه',
@@ -492,7 +518,9 @@ const LANGS={
    noText:'حدیث په دې ژبه نشته — انګریزي ښودل کیږي.',
    prev:'مخکینی حدیث',next:'راتلونکی حدیث',
    sup:'مرسته وکړئ چې اسلامي پوهه د ټولو لپاره لاسرسي وړ پاتې شي. وړیا، بې اعلانه، بې حسابه. %s په کال کې ۳۷ ډالره لګښت لري — کوډ خلاص دی.',
-   supCta:'د پرمختګ ملاتړ وکړئ'}},
+   supCta:'د پرمختګ ملاتړ وکړئ',
+   note:'هر درجه بندي د هغه عالم د نوم سره ښودل کېږي چې دا حکم یې کړی دی. یو حدیث په ساده ډول «صحیح» نه وي — الألباني، زبير علي زئي او نور ډېری وخت اختلاف کوي، او دا پاڼه یې هېڅکله په یو حکم کې نه راټولوي. د درجو رنګونه یوازې د ښودلو مرسته ده؛ دقیق الفاظ او د عالم نوم تل په خپل شکل ښودل کېږي. متن، ژباړې او درجې له %s څخه د jsDelivr له لارې راځي. مخ په شپږویشتو ژبو شتون لري، خو د حدیث متن پخپله په نهو ژبو کې دی. دلته هېڅ شی ماشیني ژباړه نه ده — هره ژباړه یو خپور شوی اثر دی.',
+   noteLoad:'یوه ټولګه یو ځل لوډېږي، بیا لوستل سملاسي او آفلاین وي. البخاري او مسلم لوی دي؛ لنډې ټولګې ژر خلاصېږي.'}},
  ckb:{name:'کوردیی ناوەندی',code:'kur',dir:'rtl',rev:false,font:'Noto+Naskh+Arabic:wght@400;600',s:{brand:'السنّة المفتوحة',
    m1:'بەش',m1s:'کتێبێک بخوێنەوە',m2:'حەدیس',m2s:'لێکۆڵینەوە · پلە · سەرچاوە',
    lang:'زمان',coll:'کۆکراوە',section:'بەش',goto:'بڕۆ بۆ حەدیس',
@@ -507,7 +535,9 @@ const LANGS={
    noText:'حەدیس بەم زمانە بەردەست نییە — ئینگلیزی پیشان دەدرێت.',
    prev:'حەدیسی پێشوو',next:'حەدیسی داهاتوو',
    sup:'یارمەتی بدە زانستی ئیسلامی بۆ هەمووان بەردەست بمێنێت. بێبەرامبەر، بێ ڕیکلام، بێ هەژمار. %s ساڵانە ٣٧ دۆلار تێچووی هەیە — کۆدەکە کراوەیە.',
-   supCta:'پشتیوانی لە گەشەپێدان بکە'}},
+   supCta:'پشتیوانی لە گەشەپێدان بکە',
+   note:'هەر پلەبەندییەک لەگەڵ ناوی ئەو زانایەی کە داویەتی پیشان دەدرێت. حەدیسێک بە سادەیی «صەحیح» نییە — الألباني، زبير علي زئي و کەسانی تر زۆرجار جیاواز دەبن، و ئەم ماڵپەڕە هەرگیز ئەوە بۆ یەک بڕیار کورت ناکاتەوە. ڕەنگی پلەکان تەنها یارمەتیی پیشاندانن؛ دەقی وردی حوکمەکە و ناوی زانا هەمیشە وەک خۆی دەنووسرێت. دەق، وەرگێڕان و پلەبەندییەکان لە %s بە jsDelivr دێن. ڕووکار بە بیست و شەش زمان بەردەستە، بەڵام دەقی حەدیس خۆی بە نۆ زمان هەیە. لێرە هیچ شتێک بە ئامێر وەرنەگێڕدراوە — هەر وەرگێڕانێک بەرهەمێکی بڵاوکراوەیە.',
+   noteLoad:'کۆکراوەیەک جارێک بار دەبێت، پاشان خوێندنەوە خێرا و بێ ئینتەرنێتە. البخاري و مسلم گەورەن؛ کۆکراوە کورتەکان خێران.'}},
  ha:{name:'Hausa',code:'hau',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Babi',m1s:'karanta wani littafi',m2:'Hadisi',m2s:'nazari · daraja · nassi',
    lang:'Harshe',coll:'Tarin hadisai',section:'Babi',goto:'Je zuwa hadisi',
@@ -522,7 +552,9 @@ const LANGS={
    noText:'Babu hadisi da wannan harshe — ana nuna Turanci.',
    prev:'Hadisin da ya gabata',next:'Hadisi na gaba',
    sup:'Taimaka a ci gaba da samun ilimin Musulunci ga kowa. Kyauta, babu talla, babu asusu. %s yana kashe $37 a shekara — lambar a buɗe take.',
-   supCta:'Tallafa wa ci gaba'}},
+   supCta:'Tallafa wa ci gaba',
+   note:'Ana nuna kowace daraja tare da sunan malamin da ya bayar da ita. Hadisi ba kawai “ingantacce” yake ba — Al-Albani, Zubair Ali Zai da wasu sukan saɓa wa juna, kuma wannan shafin bai taɓa tattara hakan zuwa hukunci ɗaya ba. Launukan daraja taimakon nuni ne kawai; ainihin kalmomin da sunan malamin ana nuna su kamar yadda suke koyaushe. Rubutu, fassarori da darajoji suna zuwa daga %s ta jsDelivr. Shafin yana da harsuna 26, amma rubutun hadisi kansa yana cikin tara. Babu abin da aka fassara da na’ura a nan — kowace fassara aiki ne da aka buga.',
+   noteLoad:'Ana ɗora tarin sau ɗaya, sannan karatu yana zama nan take kuma ba tare da yanar gizo ba. Bukhārī da Muslim manya ne; gajerun tarin suna da sauri.'}},
  sw:{name:'Kiswahili',code:'swh',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Mlango',m1s:'soma kitabu kimoja',m2:'Hadithi',m2s:'chunguza · daraja · rejea',
    lang:'Lugha',coll:'Mkusanyiko',section:'Mlango',goto:'Nenda kwenye hadithi',
@@ -537,7 +569,9 @@ const LANGS={
    noText:'Hadithi hazipatikani kwa lugha hii — inaonyesha Kiingereza.',
    prev:'Hadithi iliyotangulia',next:'Hadithi ifuatayo',
    sup:'Saidia elimu ya Kiislamu ibaki inapatikana kwa wote. Bure, hakuna matangazo, hakuna akaunti. %s hugharimu $37 kwa mwaka — msimbo ni wazi.',
-   supCta:'Saidia maendeleo'}},
+   supCta:'Saidia maendeleo',
+   note:'Kila daraja huonyeshwa pamoja na jina la mwanachuoni aliyeitoa. Hadithi si tu “sahihi” — Al-Albani, Zubair Ali Zai na wengine mara nyingi hutofautiana, na tovuti hii haiwahi kufupisha hilo kuwa hukumu moja. Rangi za madaraja ni msaada wa kuonyesha tu; maneno kamili na jina la mwanachuoni huonyeshwa kama yalivyo daima. Matini, tafsiri na madaraja hutoka %s kupitia jsDelivr. Kiolesura kinapatikana kwa lugha 26, lakini matini ya hadithi yenyewe ipo kwa tisa. Hakuna kilichotafsiriwa kwa mashine hapa — kila tafsiri ni kazi iliyochapishwa.',
+   noteLoad:'Mkusanyiko hupakiwa mara moja, kisha kusoma huwa papo hapo na nje ya mtandao. Bukhārī na Muslim ni mikubwa; mikusanyiko mifupi ni ya haraka.'}},
  so:{name:'Soomaali',code:'som',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Cutub',m1s:'akhri hal kitaab',m2:'Xadiis',m2s:'daraasad · darajo · tixraac',
    lang:'Luqad',coll:'Uruurin',section:'Cutub',goto:'U gudub xadiis',
@@ -552,7 +586,9 @@ const LANGS={
    noText:'Xadiis kuma jiro luqaddan — Ingiriisi ayaa la tusayaa.',
    prev:'Xadiiskii hore',next:'Xadiiska xiga',
    sup:'Kaalmee in cilmiga Islaamka uu qof walba heli karo. Bilaash, xayaysiin ma leh, koonto ma leh. %s waxay ku kacaysaa $37 sanadkii — koodhku waa furan yahay.',
-   supCta:'Taageer horumarinta'}},
+   supCta:'Taageer horumarinta',
+   note:'Darajo kasta waxaa lagu tusaa magaca culimadii bixisay. Xadiith ma aha si fudud “sax” — Al-Albani, Zubair Ali Zai iyo kuwa kale inta badan way ku kala duwan yihiin, boggani weligiis kuma soo koobo hal xukun. Midabada darajooyinku waa caawimaad muuqaal oo keliya; ereyada saxda ah iyo magaca culimadu had iyo jeer sidooda ayaa loo muujiyaa. Qoraalka, turjumaadaha iyo darajooyinka waxay ka yimaadaan %s iyada oo loo marayo jsDelivr. Is-dhexgalku wuxuu ku diyaar yahay 26 luqadood, halka qoraalka xadiithku uu ku jiro sagaal. Waxba halkan laguma turjumin mashiin — turjumaad kastaa waa shaqo la daabacay.',
+   noteLoad:'Ururintu hal mar ayay soo shubataa, kaddibna akhrisku waa isla markiiba oo khadka ka baxsan. Bukhārī iyo Muslim way waaweyn yihiin; ururinta gaagaaban way dhaqso badan yihiin.'}},
  uz:{name:'Oʻzbekcha',code:'uzb',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Bob',m1s:'bitta kitobni oʻqing',m2:'Hadis',m2s:'oʻrganish · daraja · manba',
    lang:'Til',coll:'Toʻplam',section:'Bob',goto:'Hadisga oʻtish',
@@ -567,7 +603,9 @@ const LANGS={
    noText:'Bu tilda hadis mavjud emas — ingliz tili koʻrsatilmoqda.',
    prev:'Oldingi hadis',next:'Keyingi hadis',
    sup:'Islom ilmi hamma uchun ochiq qolishiga yordam bering. Bepul, reklamasiz, hisobsiz. %s yiliga $37 turadi — kod ochiq.',
-   supCta:'Rivojlanishni qoʻllab-quvvatlash'}},
+   supCta:'Rivojlanishni qoʻllab-quvvatlash',
+   note:'Har bir daraja uni bergan olimning ismi bilan birga ko‘rsatiladi. Hadis shunchaki “sahih” bo‘lmaydi — Al-Albani, Zubair Ali Zai va boshqalar ko‘pincha ixtilof qiladilar, bu sayt esa buni hech qachon bitta hukmga jamlamaydi. Daraja ranglari faqat ko‘rsatish yordamchisi; aniq ibora va olimning ismi doimo o‘z holicha keltiriladi. Matn, tarjimalar va darajalar %s dan jsDelivr orqali keladi. Interfeys 26 tilda mavjud, hadis matnining o‘zi esa to‘qqiz tilda. Bu yerda hech narsa mashina tarjimasi emas — har bir tarjima nashr etilgan asardir.',
+   noteLoad:'To‘plam bir marta yuklanadi, so‘ng o‘qish bir zumda va oflayn bo‘ladi. Bukhārī va Muslim katta; qisqaroq to‘plamlar tez ochiladi.'}},
  az:{name:'Azərbaycanca',code:'aze',dir:'ltr',rev:false,s:{brand:'Open Sünnə',
    m1:'Bölmə',m1s:'bir kitab oxuyun',m2:'Hədis',m2s:'araşdır · dərəcə · istinad',
    lang:'Dil',coll:'Toplu',section:'Bölmə',goto:'Hədisə keç',
@@ -582,7 +620,9 @@ const LANGS={
    noText:'Bu dildə hədis yoxdur — ingiliscə göstərilir.',
    prev:'Əvvəlki hədis',next:'Sonrakı hədis',
    sup:'İslam elminin hamı üçün əlçatan qalmasına kömək edin. Pulsuz, reklamsız, hesabsız. %s ildə $37-a başa gəlir — kod açıqdır.',
-   supCta:'İnkişafı dəstəklə'}},
+   supCta:'İnkişafı dəstəklə',
+   note:'Hər dərəcə onu verən alimin adı ilə birlikdə göstərilir. Hədis sadəcə “səhih” olmur — Al-Albani, Zubair Ali Zai və başqaları çox vaxt fərqlənir və bu sayt bunu heç vaxt tək bir hökmə yığmır. Dərəcə rəngləri yalnız göstərmə köməyidir; dəqiq ifadə və alimin adı həmişə olduğu kimi verilir. Mətn, tərcümələr və dərəcələr %s mənbəyindən jsDelivr vasitəsilə gəlir. İnterfeys 26 dildə mövcuddur, hədis mətninin özü isə doqquz dildədir. Burada heç nə maşın tərcüməsi deyil — hər tərcümə nəşr olunmuş bir əsərdir.',
+   noteLoad:'Toplu bir dəfə yüklənir, sonra oxumaq ani və oflayn olur. Bukhārī və Muslim böyükdür; qısa toplular sürətlidir.'}},
  ml:{name:'മലയാളം',code:'mal',dir:'ltr',rev:false,font:'Noto+Serif+Malayalam:wght@400;600&family=Noto+Sans+Malayalam:wght@400;600',s:{brand:'ഓപ്പൺ സുന്നാഹ്',
    m1:'അധ്യായം',m1s:'ഒരു ഗ്രന്ഥം വായിക്കുക',m2:'ഹദീസ്',m2s:'പഠനം · ഗ്രേഡ് · ഉദ്ധരണി',
    lang:'ഭാഷ',coll:'സമാഹാരം',section:'അധ്യായം',goto:'ഹദീസിലേക്ക് പോകുക',
@@ -597,7 +637,9 @@ const LANGS={
    noText:'ഈ ഭാഷയിൽ ഹദീസ് ലഭ്യമല്ല — ഇംഗ്ലീഷ് കാണിക്കുന്നു.',
    prev:'മുൻ ഹദീസ്',next:'അടുത്ത ഹദീസ്',
    sup:'ഇസ്ലാമിക വിജ്ഞാനം എല്ലാവർക്കും ലഭ്യമായിരിക്കാൻ സഹായിക്കുക. സൗജന്യം, പരസ്യമില്ല, അക്കൗണ്ടില്ല. %s പ്രവർത്തിപ്പിക്കാൻ വർഷം $37 ചെലവാകും — കോഡ് തുറന്നതാണ്.',
-   supCta:'വികസനത്തെ പിന്തുണയ്ക്കുക'}},
+   supCta:'വികസനത്തെ പിന്തുണയ്ക്കുക',
+   note:'ഓരോ ഗ്രേഡിംഗും അത് നൽകിയ പണ്ഡിതന്റെ പേരിനൊപ്പം കാണിക്കുന്നു. ഒരു ഹദീസ് വെറുതെ “സ്വഹീഹ്” അല്ല — Al-Albani, Zubair Ali Zai തുടങ്ങിയവർ പലപ്പോഴും വിയോജിക്കുന്നു, ഈ സൈറ്റ് അതൊരിക്കലും ഒറ്റ വിധിയിലേക്ക് ചുരുക്കുന്നില്ല. ഗ്രേഡ് നിറങ്ങൾ പ്രദർശന സഹായം മാത്രം; കൃത്യമായ വാക്കുകളും പണ്ഡിതന്റെ പേരും എപ്പോഴും അതേപടി കാണിക്കുന്നു. പാഠം, വിവർത്തനങ്ങൾ, ഗ്രേഡിംഗുകൾ %s ൽ നിന്ന് jsDelivr വഴി വരുന്നു. ഇന്റർഫേസ് 26 ഭാഷകളിൽ ലഭ്യമാണ്; ഹദീസ് പാഠം ഒൻപത് ഭാഷകളിൽ മാത്രം. ഇവിടെ ഒന്നും യന്ത്ര വിവർത്തനമല്ല — ഓരോ വിവർത്തനവും പ്രസിദ്ധീകരിച്ച കൃതിയാണ്.',
+   noteLoad:'ഒരു സമാഹാരം ഒരിക്കൽ ലോഡ് ചെയ്യുന്നു, പിന്നീട് വായന തൽക്ഷണവും ഓഫ്‌ലൈനുമാണ്. Bukhārī, Muslim എന്നിവ വലുതാണ്; ചെറിയ സമാഹാരങ്ങൾ വേഗത്തിലാണ്.'}},
  om:{name:'Afaan Oromoo',code:'orm',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Boqonnaa',m1s:'kitaaba tokko dubbisi',m2:'Hadiisa',m2s:'qorannoo · sadarkaa · wabii',
    lang:'Afaan',coll:'Walitti qabaa',section:'Boqonnaa',goto:'Gara hadiisaa deemi',
@@ -612,7 +654,9 @@ const LANGS={
    noText:'Afaan kanaan hadiisni hin jiru — Ingiliffi agarsiifamaa jira.',
    prev:'Hadiisa darbe',next:'Hadiisa itti aanu',
    sup:'Beekumsi Islaamaa namoota hundaaf akka argamu gargaari. Bilisa, beeksisa hin qabu, herrega hin qabu. %s waggaatti $37 baasii qaba — koodichi banaa dha.',
-   supCta:'Guddina deeggari'}},
+   supCta:'Guddina deeggari',
+   note:'Sadarkaan hundi maqaa hayyuu isa kenne waliin agarsiifama. Hadiisni salphaatti “sahiih” miti — Al-Albani, Zubair Ali Zai fi kanneen biroo yeroo baayyee garaa garummaa qabu, marsariitiin kunis gonkumaa murtii tokkotti hin qusatu. Halluun sadarkaa gargaarsa agarsiisaa qofa; jechi sirriin fi maqaan hayyuu yeroo hunda akkuma jiranitti agarsiifamu. Barreeffamni, hiikkaawwanii fi sadarkaaleen %s irraa karaa jsDelivr dhufu. Fuulli afaan 26n ni argama, barreeffamni hadiisaa mataan isaa garuu afaan sagaliin jira. Asitti wanti maashinaan hiikame hin jiru — hiikkaan hundi hojii maxxanfamedha.',
+   noteLoad:'Walitti qabaan al tokko fe’ama, achiin dubbisuun battalumatti fi karaa intarneetii malee ta’a. Bukhārī fi Muslim gurguddaa dha; walitti qabaan gabaabaan saffisaa dha.'}},
  am:{name:'አማርኛ',code:'amh',dir:'ltr',rev:false,font:'Noto+Serif+Ethiopic:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;600',s:{brand:'ኦፐን ሱና',
    m1:'ምዕራፍ',m1s:'አንድ መጽሐፍ አንብብ',m2:'ሐዲስ',m2s:'ጥናት · ደረጃ · ማጣቀሻ',
    lang:'ቋንቋ',coll:'ስብስብ',section:'ምዕራፍ',goto:'ወደ ሐዲስ ሂድ',
@@ -627,7 +671,9 @@ const LANGS={
    noText:'በዚህ ቋንቋ ሐዲስ የለም — እንግሊዝኛ እየታየ ነው።',
    prev:'ቀዳሚው ሐዲስ',next:'ቀጣዩ ሐዲስ',
    sup:'እስላማዊ እውቀት ለሁሉም ተደራሽ ሆኖ እንዲቆይ እርዱ። ነጻ፣ ማስታወቂያ የለም፣ መለያ የለም። %s በዓመት $37 ያስወጣል — ኮዱ ክፍት ነው።',
-   supCta:'ልማትን ደግፍ'}},
+   supCta:'ልማትን ደግፍ',
+   note:'እያንዳንዱ ደረጃ ከሰጠው ዓሊም ስም ጋር ይታያል። ሐዲስ በቀላሉ “ሶሒሕ” አይደለም — Al-Albani፣ Zubair Ali Zai እና ሌሎችም ብዙ ጊዜ ይለያያሉ፣ ይህም ጣቢያ ይህን ወደ አንድ ብይን አይጠቀልልም። የደረጃ ቀለሞች የማሳያ እገዛ ብቻ ናቸው፤ ትክክለኛው አገላለጽና የዓሊሙ ስም ሁልጊዜ እንዳሉ ይቀርባሉ። ጽሑፉ፣ ትርጉሞቹና ደረጃዎቹ ከ%s በjsDelivr በኩል ይመጣሉ። ገጹ በ26 ቋንቋ ይገኛል፤ የሐዲሱ ጽሑፍ ራሱ ግን በዘጠኝ ቋንቋ ነው። እዚህ ምንም በማሽን የተተረጎመ የለም — እያንዳንዱ ትርጉም የታተመ ሥራ ነው።',
+   noteLoad:'አንድ ስብስብ አንድ ጊዜ ይጫናል፣ ከዚያ ንባብ ፈጣንና ከመስመር ውጭ ይሆናል። Bukhārī እና Muslim ትልቅ ናቸው፤ አጫጭሮቹ ስብስቦች ፈጣን ናቸው።'}},
  es:{name:'Español',code:'spa',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Capítulo',m1s:'leer un libro',m2:'Hadiz',m2s:'estudiar · grado · citar',
    lang:'Idioma',coll:'Colección',section:'Capítulo',goto:'Ir al hadiz',
@@ -642,7 +688,9 @@ const LANGS={
    noText:'No hay hadices en este idioma — se muestra en inglés.',
    prev:'Hadiz anterior',next:'Hadiz siguiente',
    sup:'Ayude a mantener accesible el conocimiento islámico. Gratis, sin anuncios, sin cuenta. %s cuesta 37 $ al año — el código es abierto.',
-   supCta:'Apoyar el desarrollo'}},
+   supCta:'Apoyar el desarrollo',
+   note:'Cada valoración se muestra con el nombre del sabio que la dio. Un hadiz no es simplemente «auténtico» — Al-Albani, Zubair Ali Zai y otros discrepan a menudo, y este sitio nunca reduce eso a un solo veredicto. Los colores de los grados son una ayuda visual; la formulación exacta y el nombre del sabio se muestran siempre literalmente. El texto, las traducciones y las valoraciones provienen de %s a través de jsDelivr. La interfaz está disponible en 26 idiomas; el texto de los hadices existe en nueve. Nada aquí está traducido por máquina — cada traducción es una obra publicada.',
+   noteLoad:'Una colección se carga una vez, y después la lectura es instantánea y sin conexión. Bukhārī y Muslim son extensos; las colecciones más breves son rápidas.'}},
  de:{name:'Deutsch',code:'deu',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Kapitel',m1s:'ein Buch lesen',m2:'Hadith',m2s:'studieren · Grad · zitieren',
    lang:'Sprache',coll:'Sammlung',section:'Kapitel',goto:'Zum Hadith',
@@ -657,7 +705,9 @@ const LANGS={
    noText:'In dieser Sprache sind keine Hadithe verfügbar — Anzeige auf Englisch.',
    prev:'Vorheriger Hadith',next:'Nächster Hadith',
    sup:'Helfen Sie mit, islamisches Wissen zugänglich zu halten. Kostenlos, ohne Werbung, ohne Konto. %s kostet 37 $ im Jahr — der Code ist offen.',
-   supCta:'Entwicklung unterstützen'}},
+   supCta:'Entwicklung unterstützen',
+   note:'Jede Einstufung wird mit dem Namen des Gelehrten gezeigt, der sie vorgenommen hat. Ein Hadith ist nicht einfach „authentisch“ — Al-Albani, Zubair Ali Zai und andere weichen oft voneinander ab, und diese Seite fasst das nie zu einem einzigen Urteil zusammen. Die Farben der Stufen sind nur eine Anzeigehilfe; der genaue Wortlaut und der Name des Gelehrten werden stets unverändert wiedergegeben. Text, Übersetzungen und Einstufungen stammen von %s über jsDelivr. Die Oberfläche gibt es in 26 Sprachen; der Hadith-Text selbst liegt in neun vor. Nichts hier ist maschinell übersetzt — jede Übersetzung ist ein veröffentlichtes Werk.',
+   noteLoad:'Eine Sammlung wird einmal geladen, danach ist das Lesen sofort und offline möglich. Bukhārī und Muslim sind umfangreich; die kürzeren Sammlungen sind schnell.'}},
  ms:{name:'Bahasa Melayu',code:'may',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Bab',m1s:'baca satu kitab',m2:'Hadis',m2s:'kaji · darjat · rujuk',
    lang:'Bahasa',coll:'Himpunan',section:'Bab',goto:'Pergi ke hadis',
@@ -672,7 +722,9 @@ const LANGS={
    noText:'Hadis tiada dalam bahasa ini — memaparkan bahasa Inggeris.',
    prev:'Hadis sebelumnya',next:'Hadis seterusnya',
    sup:'Bantu pastikan ilmu Islam kekal boleh dicapai. Percuma, tiada iklan, tiada akaun. %s memerlukan $37 setahun — kodnya terbuka.',
-   supCta:'Sokong pembangunan'}},
+   supCta:'Sokong pembangunan',
+   note:'Setiap penilaian dipaparkan bersama nama ulama yang memberikannya. Sesebuah hadis bukan sekadar “sahih” — Al-Albani, Zubair Ali Zai dan yang lain kerap berbeza, dan laman ini tidak pernah meringkaskannya kepada satu keputusan. Warna darjah hanyalah bantuan paparan; lafaz tepat dan nama ulamanya sentiasa ditunjukkan sebagaimana adanya. Teks, terjemahan dan penilaian datang daripada %s melalui jsDelivr. Antara muka tersedia dalam 26 bahasa, manakala teks hadis itu sendiri wujud dalam sembilan. Tiada apa-apa di sini diterjemahkan mesin — setiap terjemahan ialah karya terbitan.',
+   noteLoad:'Sesebuah koleksi dimuatkan sekali, kemudian pembacaan menjadi serta-merta dan luar talian. Bukhārī dan Muslim besar; koleksi yang lebih pendek cepat.'}},
  sq:{name:'Shqip',code:'alb',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Kapitull',m1s:'lexo një libër',m2:'Hadith',m2s:'studio · gradë · cito',
    lang:'Gjuha',coll:'Përmbledhje',section:'Kapitull',goto:'Shko te hadithi',
@@ -687,7 +739,9 @@ const LANGS={
    noText:'Hadithet nuk ofrohen në këtë gjuhë — po shfaqet anglishtja.',
    prev:'Hadithi i mëparshëm',next:'Hadithi tjetër',
    sup:'Ndihmoni që dija islame të mbetet e arritshme për të gjithë. Falas, pa reklama, pa llogari. %s kushton 37 $ në vit — kodi është i hapur.',
-   supCta:'Mbështet zhvillimin'}},
+   supCta:'Mbështet zhvillimin',
+   note:'Çdo vlerësim shfaqet bashkë me emrin e dijetarit që e ka dhënë. Një hadith nuk është thjesht “i vërtetë” — Al-Albani, Zubair Ali Zai dhe të tjerë shpesh ndryshojnë, dhe kjo faqe kurrë nuk e përmbledh atë në një verdikt të vetëm. Ngjyrat e shkallëve janë vetëm ndihmë paraqitjeje; formulimi i saktë dhe emri i dijetarit jepen gjithmonë fjalë për fjalë. Teksti, përkthimet dhe vlerësimet vijnë nga %s përmes jsDelivr. Ndërfaqja ofrohet në 26 gjuhë; teksti i hadithit vetë ekziston në nëntë. Asgjë këtu nuk është përkthim makinerie — çdo përkthim është vepër e botuar.',
+   noteLoad:'Një përmbledhje ngarkohet një herë, pastaj leximi është i menjëhershëm dhe pa internet. Bukhārī dhe Muslim janë të mëdha; përmbledhjet më të shkurtra janë të shpejta.'}},
  bs:{name:'Bosanski',code:'bos',dir:'ltr',rev:false,s:{brand:'Open Sunnah',
    m1:'Poglavlje',m1s:'pročitaj jednu knjigu',m2:'Hadis',m2s:'proučavanje · stepen · citat',
    lang:'Jezik',coll:'Zbirka',section:'Poglavlje',goto:'Idi na hadis',
@@ -702,7 +756,9 @@ const LANGS={
    noText:'Hadisi nisu dostupni na ovom jeziku — prikazuje se engleski.',
    prev:'Prethodni hadis',next:'Sljedeći hadis',
    sup:'Pomozite da islamsko znanje ostane dostupno svima. Besplatno, bez reklama, bez računa. %s košta 37 $ godišnje — kod je otvoren.',
-   supCta:'Podrži razvoj'}},
+   supCta:'Podrži razvoj',
+   note:'Svaka ocjena prikazuje se uz ime učenjaka koji ju je dao. Hadis nije jednostavno “vjerodostojan” — Al-Albani, Zubair Ali Zai i drugi često se razilaze, a ova stranica to nikada ne svodi na jednu presudu. Boje stepena samo su pomoć pri prikazu; tačna formulacija i ime učenjaka uvijek se navode doslovno. Tekst, prijevodi i ocjene dolaze sa %s putem jsDelivr. Sučelje je dostupno na 26 jezika, dok sam tekst hadisa postoji na devet. Ovdje ništa nije mašinski prevedeno — svaki prijevod je objavljeno djelo.',
+   noteLoad:'Zbirka se učita jednom, nakon čega je čitanje trenutno i van mreže. Bukhārī i Muslim su veliki; kraće zbirke su brze.'}},
 };
 
 const KOFI='https://ko-fi.com/openmushaf';
@@ -1084,14 +1140,18 @@ function applyLang(){
     .map(([k,c])=>`<i style="background:rgba(${c},.8)"></i><span>${esc(T(k))}</span>`).join('')
     +`<i style="background:rgba(51,66,126,.62)"></i><span>${esc(T('lColl'))}</span>`;
   $('#foot').innerHTML=
-    `<b>Every grading is shown with the scholar who gave it.</b> A hadith is not simply “authentic” — `+
-    `Al-Albani, Zubair Ali Zai and others often differ, and this site never collapses that into one verdict. `+
-    `Grade colours are a display aid; the exact wording and the scholar's name are always shown verbatim.<br><br>`+
-    `Text, translations and gradings from <a href="https://github.com/fawazahmed0/hadith-api" target="_blank" rel="noopener">hadith-api</a> via jsDelivr. `+
-    `Ten collections; hadith text exists in nine languages, so the interface offers only those. `+
-    `Nothing here is machine-translated — every translation is a published work.<br>`+
-    `<span style="opacity:.85">A collection loads once, then reading is instant and offline. Bukhari and Muslim are large; the shorter collections are quick.</span>`+
-    `<div class="support">${esc(T('sup')).replace('%s','Open Sunnah')} `+
+    // The grading sentence LEADS in T('note') and that ordering is the point: a reader
+    // has to understand the site REPORTS scholars' judgements rather than issuing them.
+    // %s carries the hadith-api link, the same contract sup uses for the brand — markup
+    // stays in code, prose localises, and the link lands mid-sentence rather than being
+    // stranded after it. noteLoad is a SEPARATE key so it keeps its own opacity span;
+    // folding it into note would put download sizes inside an editorial note and lose
+    // a style zone for nothing.
+    esc(T('note')).replace('%s',
+      `<a href="https://github.com/fawazahmed0/hadith-api" target="_blank" rel="noopener">hadith-api</a>`)+
+    `<br>`+
+    `<span style="opacity:.85">${esc(T('noteLoad'))}</span>`+
+    `<div class="support">${esc(T('sup')).replace('%s',esc(T('brand')))} `+
     `<a href="${KOFI}" target="_blank" rel="noopener">${esc(T('supCta'))} ${l.dir==='rtl'?'←':'→'}</a></div>`;
   paintDensity();
 }
