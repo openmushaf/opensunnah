@@ -51,6 +51,25 @@
   .ar-title{font-family:var(--arabic);font-size:clamp(1.15rem,2.6vw,1.5rem);color:var(--saffron);opacity:.85;line-height:1}
   .loc{font-family:var(--display);font-style:italic;font-size:15px;color:rgba(239,227,204,.82);
        padding-inline-start:.7em;border-inline-start:1px solid rgba(229,163,58,.35)}
+  /* margin-inline-start:auto, never margin-left. The header is a flex row and this
+     pushes the button to the READING end — the right in English, the LEFT in Arabic,
+     Urdu, Persian, Pashto and Kurdish. A fixed right margin would strand it at the
+     start of the line in five of the twenty-six locales. */
+  /* BORDER ALPHA .53 HERE, .5 IN .support a — THE DIVERGENCE IS DELIBERATE. Do not
+     "fix" these into agreement. The border is a non-text UI component and WCAG asks
+     3:1 of it, measured against whatever it actually sits on. The body gradient is
+     lightest at its centre (50% 2%, #241B3E) — which is exactly where this header
+     button sits, and nowhere near where the footer link sits. At .5 the border
+     composites to 2.84:1 up here and passes down there. .53 is the next clean value
+     above the 0.5260 minimum, giving 3.03:1 at the worst point and 3.08-3.12:1 where
+     the button actually renders. Same rule, same colour, different ground, so
+     different alpha. The text is var(--saffron) in both and stays that way. */
+  .supbtn{margin-inline-start:auto;color:var(--saffron);text-decoration:none;
+    border:1px solid rgba(229,163,58,.53);border-radius:3px;padding:7px 14px;
+    font-size:12.5px;letter-spacing:.03em;white-space:nowrap;
+    transition:background .18s,border-color .18s}
+  .supbtn:hover{background:rgba(229,163,58,.12);border-color:var(--saffron)}
+  .supbtn:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
   .rule{height:1px;background:linear-gradient(90deg,transparent,rgba(229,163,58,.3) 8%,rgba(229,163,58,.3) 92%,transparent);margin:0 0 18px}
 
   .density{display:flex;border:1px solid rgba(239,227,204,.13);border-radius:3px;overflow:hidden;width:max-content;margin-bottom:18px;max-width:100%}
@@ -185,6 +204,7 @@
     .density{width:100%}.den{flex:1;padding:9px 6px;min-width:0}
     .den .s{font-size:10px;letter-spacing:0}
     .den .t{font-size:.9rem}
+    .supbtn{min-height:44px;display:inline-flex;align-items:center}
     .tab,.ghost{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
     select,input{min-height:44px}
     .clockwrap{max-width:250px}
@@ -208,6 +228,7 @@
   <header>
     <h1 id="brand">Open Sunnah</h1><span class="ar-title">السنّة</span>
     <span class="loc" id="loc"></span>
+    <a class="supbtn" id="supBtn" href="" target="_blank" rel="noopener"></a>
   </header>
   <div class="rule"></div>
 
@@ -1037,6 +1058,11 @@ function applyLang(){
   /* the markup keeps "Open Sunnah" as a static fallback so a crawler and a
      no-JS reader still see a name; this localises it once the app runs */
   $('#brand').textContent=T('brand');
+  /* href from the KOFI constant, not a literal, so the header and the footer link
+     can never drift apart. Label is T('supCta') alone — the footer keeps the arrow
+     and the full sentence; this is the compact one. */
+  $('#supBtn').href=KOFI;
+  $('#supBtn').textContent=T('supCta');
   $('#l_lang').textContent=T('lang');$('#l_coll').textContent=T('coll');
   $('#l_goto').textContent=T('goto');$('#l_grades').textContent=T('grades');
   /* the visible eyebrows are separate elements, so the controls themselves have
