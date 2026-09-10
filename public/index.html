@@ -14,9 +14,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://opensunnah.org/#website","url":"https://opensunnah.org/","name":"Open Sunnah","description":"A free, open hadith reader. Ten collections, 26 languages, every grading shown with the scholar who gave it. No account, no tracking.","inLanguage":["ar","en"],"isAccessibleForFree":true},{"@type":"Collection","@id":"https://opensunnah.org/#collection","name":"Hadith collections","isPartOf":{"@id":"https://opensunnah.org/#website"},"hasPart":[{"@type":"Book","name":"صحيح البخاري","alternateName":"Sahih al-Bukhari","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"صحيح مسلم","alternateName":"Sahih Muslim","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"سنن أبي داود","alternateName":"Sunan Abu Dawud","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"جامع الترمذي","alternateName":"Jami at-Tirmidhi","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"سنن النسائي","alternateName":"Sunan an-Nasai","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"سنن ابن ماجه","alternateName":"Sunan Ibn Majah","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"موطأ مالك","alternateName":"Muwatta Malik","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"الأربعون النووية","alternateName":"Forty Hadith of an-Nawawi","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"الأربعون القدسية","alternateName":"Forty Hadith Qudsi","inLanguage":"ar","isAccessibleForFree":true},{"@type":"Book","name":"أربعون ولي الله الدهلوي","alternateName":"Forty Hadith of Shah Waliullah","inLanguage":"ar","isAccessibleForFree":true}]}]}
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/fonts/base.css">
 <style>
   :root{
     --lapis:#33427E; --saffron:#E5A33A; --madder:#B0483E;
@@ -1110,7 +1108,11 @@ function applyLang(){
   const l=L();
   document.documentElement.lang=state.lang; document.documentElement.dir=l.dir;
   if(l.font){if(!fontLink){fontLink=document.createElement('link');fontLink.rel='stylesheet';document.head.appendChild(fontLink);}
-    fontLink.href=`https://fonts.googleapis.com/css2?family=${l.font}&display=swap`;}
+    /* Script fonts are self-hosted, one stylesheet per language's family
+       string, so a reader in Urdu or Amharic is not announced to Google
+       just by picking their own language. The slug must match the one
+       tools/fetch-fonts.py writes; keep the two in step. */
+    fontLink.href='/fonts/'+l.font.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.css';}
   $('#draftNote').textContent=l.rev?'':T('draft');
   /* the markup keeps "Open Sunnah" as a static fallback so a crawler and a
      no-JS reader still see a name; this localises it once the app runs */
